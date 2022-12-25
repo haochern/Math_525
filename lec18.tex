@@ -1,0 +1,188 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Uni}{Uni}
+\DeclareMathOperator{\Bin}{Binomal}
+\DeclareMathOperator{\Poisson}{Poisson}
+\DeclareMathOperator{\Exp}{Exp}
+\DeclareMathOperator{\Geom}{Geom}
+\DeclareMathOperator{\Gamdis}{Gamma}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 18}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{October 14, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Moment Generating Functions}
+
+\defn{
+    Moment Generating Functions $M_X(t)=\E(e^{Xt})$, in which $t$ is any real number for which this finite. 
+    \\\\
+    If $X\geq 0$, then $M_X(t)$ exists for $t\leq 0$. If $M_X(t)$ exists in an open interval about $t=0$, then
+    \begin{align*}
+        M_X(t)&=\E[e^{Xt}] \\
+        &=\E[1+Xt+\frac{1}{2}(Xt)^2+\dots] \\
+        &=1+t\E X+\frac{1}{2}t^2\E(X^2)+\dots+\frac{1}{n!}t^n\E(X^n)+\dots
+    \end{align*}
+    \[\implies M^{(n)}_X(t)\bigg\vert_{t=0}=\E(X^n)\]
+    The Pareto r.v. does have a MGF that is finite for any $t>0$ because $\E(X^k)$ is finite only for $0\leq k<\alpha$.
+    \[S_X(x)=\left(\frac{\theta}{\theta+x}\right)^\alpha, \qquad x\geq0\]
+}
+
+\eg{
+    $X\sim\Bin(n,p)$
+    \begin{align*}
+        M_X(t)&=\E(e^{Xt}) \\
+        &=\sum^n_{x=0}e^{xt}\cdot\begin{pmatrix}n\\x\end{pmatrix}p^x(1-p)^{n-x} \\
+        &=\sum^n_{x=0}\begin{pmatrix}n\\x\end{pmatrix}(pe^t)^x(1-p)^{n-x} \\
+        &=(pe^t+(1-p))^n, \qquad t\in\R
+    \end{align*}
+    \[M'_X(t)=n(pe^t+(1-p))^{n-1}\cdot pe^t\]
+    \[\implies\E X=M'_X(0)=np\]
+    \[M''_X(t)=n(n-1)(pe^t+(1-p))^{n-2}(pe^t)^2+n(pe^t+(1-p))^{n-1}pe^t\]
+    \[\E(X^2)=M''_X(0)=n(n-1)p^2+np\]
+    \[\implies\Var X=n(n-1)p^2+np-(np)^2=np-np^2=np(1-p)\]
+}
+
+\eg{
+    $X\sim\Poisson(\lambda)$
+    \begin{align*}
+        M_X(t)&=\E(e^{Xt}) \\
+        &=\sum^\infty_{x=0}e^{xt}\cdot e^{-\lambda}\frac{\lambda^x}{x!} \\
+        &=\sum^\infty_{x=0}e^{-\lambda}\cdot\frac{(\lambda e^t)^x}{x!} \\
+        &=e^{-\lambda}\cdot e^{\lambda e^t} \\
+        &=e^{\lambda(e^t-1)}, \qquad t\in\R
+    \end{align*}
+    \[M'_X(t)=e^{\lambda(e^t-1)}\cdot\lambda e^t\]
+    \[\implies\E X=M'_X(0)=\lambda\]
+    \[M''_X(t)=e^{\lambda(e^t-1)}(\lambda e^t)^2+e^{\lambda(e^t-1)}\cdot\lambda e^t\]
+    \[\E(X^2)=M''_X(0)=\lambda^2+\lambda\]
+    \[\implies\Var X=\lambda^2+\lambda-\lambda^2=\lambda\]
+}
+
+\eg{
+    $X\sim\Gamdis(\alpha,\lambda)$
+    \begin{align*}
+        M_X(t)&=\E(e^{Xt}) \\
+        &=\int^\infty_0 e^{xt}\cdot\frac{\lambda^\alpha}{\Gamma(\alpha)}x^{\alpha-1}e^{-\lambda x}\;dx \\
+        &=\frac{\lambda^\alpha}{\Gamma(\alpha)}\int^\infty_0 x^{\alpha-1}e^{-x(\lambda-t)}\;dx \\
+        &=\left(\frac{\lambda}{\lambda-t}\right)^\alpha, \qquad t<\lambda
+    \end{align*}
+    where $\int^\infty_0 x^{\alpha-1}e^{-x(\lambda-t)}\;dx=\frac{\Gamma(\alpha)}{(\lambda)}$. From here, we will have $\E X=\frac{\alpha}{\lambda}$ and $\Var X=\frac{\alpha}{\lambda^2}$.
+}
+
+\cor{
+    Second application of MGFs. If $X_1, X_2, \dots, X_n$ are independent r.v.s with MGFs $M_1, M_2, \dots, M_n$, then the MGF of $X=X_1+X_2+\dots+X_n$ is
+    \begin{align*}
+        M_X(t)&=\E(e^{Xt}) \\
+        &=\E(e^{(X_1+X_2+\dots+X_n)t}) \\
+        &=\E(e^{X_1t}\cdot e^{X_2t}\dots e^{X_nt}) \\
+        &=\E(e^{X_1t})\cdot\E(e^{X_2t})\dots\E(e^{X_nt}) \\
+        &=M_1(t)M_2(t)\dots M_n(t)
+    \end{align*}
+    If these MGFs exist in an open interval about 0, then $M_X(t)$ determines the distribution of $X$.
+}
+
+\eg{
+    $X_i\sim\Bin(n_i, p)$, $i=1,\dots,m$, independent.
+    \\\\
+    Let $X=X_1+\dots+X_m$
+    \begin{align*}
+        &\implies M_X(t)=\prod_{i=1}^m(pe^t+(1-p))^{n_i} =(pe^t+(1-p))^{\sum_{i=1}^m n_i} \\
+        &\implies X\sim\Bin\left(\sum_{i=1}^m n_i,p\right)
+    \end{align*}
+}
+
+\eg{
+    $X_i\sim\Poisson(\lambda_i)$, $i=1,\dots,n$, independent.
+    \\\\
+    Let $X=X_1+\dots+X_n$
+    \begin{align*}
+        &\implies M_X(t)=\prod_{i=1}^n e^{\lambda_i(e^t-1)}=e^{(\sum^n_{i=1}\lambda_i)(e^t-1)} \\
+        &\implies X\sim\Poisson\left(\sum_{i=1}^n \lambda_i\right)
+    \end{align*}
+}
+
+\eg{
+    Aside: $\alpha=1$, then $X\sim\Exp(\lambda)$, $M_X(t)=\frac{\lambda}{\lambda-t}$
+    \\\\
+    $X_i\sim\Gamdis(\alpha_i,\lambda)$, $i=1,2,\dots,n$, independent.
+    \[X=\sum^n_{i=1}X_i\]
+    \begin{align*}
+        M_X(t)&=\prod^n_{i=1}\left(\frac{\lambda}{\lambda-t}\right)^{\alpha_i} \\
+        &=\left(\frac{\lambda}{\lambda-t}\right)^{\sum^n_{i=1}\alpha_i}
+    \end{align*}
+    \[X\sim\Gamma(\sum^n_{i=1}\alpha_i, \alpha)\]
+}
+
+\pagebreak
+
+\eg{
+    $\Geom(p)$
+    \\\\
+    $\P(X=x)=(1-p)^{x-1}p$, $x=1,2,\dots$
+    \begin{align*}
+        M_X(t)&=\sum^\infty_{x=1}e^{xt}\cdot(1-p)^{x-1}\cdot p \\
+        &=\frac{p}{1-p}\sum^\infty_{x=1}(e^t(1-p))^x \\
+        &=\frac{p}{1-p}\cdot\frac{e^t(1-p)-0}{1-e^t(1-p)}\cdot\left(\frac{e^{-t}}{e^{-t}}\right) \\
+        &=\frac{p}{e^{-t}-(1-p)}
+    \end{align*}
+    where $e^t(1-p)\in(-1,1)$. $e^t<\frac{1}{1-p}$, $t<-\ln(1-p)$.
+}
+
+\end{document}

@@ -1,0 +1,200 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 19}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{October 24, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Limit Theorems}
+
+\defn{
+    \textbf{Markov's Inequality}
+    \\\\
+    If $X$ is a random variable with finite mean, then for any $a>0$, 
+    \[\P(|X|\geq a)\leq\frac{1}{a}\E(|X|)\]
+}
+
+\pf{
+    Let $A=\{\omega:|X(\omega)\geq a|\}$
+    \[|X|\geq a1_A\]
+    where the right hand side is given by $\text{rhs}=\left\{\begin{array}{cc}
+        a & \text{if}\;|X|\geq a \\
+        0 & \text{if}\;|X|< a
+    \end{array}\right.$
+    \begin{align*}
+        \implies \E(|X|)&\geq a\E(1_A) \\
+        &=a\P(A) \\
+        &=a\P(|X|\geq a)
+    \end{align*}
+    \[\implies \P(|X|\geq a)\leq\frac{1}{a}\E(|X|)\]
+}
+
+\defn{
+    \textbf{Chebyshev's inequality}
+    \\\\
+    If $X$ is a random variable with finite mean $\mu$ and variance $\sigma^2$, then for any $k>0$, 
+    \[\P(|X-\mu|\geq k)\leq\frac{\sigma^2}{k^2}\]
+}
+
+\pf{
+    Apply Markov's inequality to $(X-\mu)^2$ with $a=k^2$:
+    \begin{align*}
+        \P((X-\mu)^2\geq k^2)&\leq\frac{1}{k^2}\E((X-\mu)^2) \\
+        \implies \P(|X-\mu|\geq k)&\leq\frac{\sigma^2}{k^2}
+    \end{align*}
+}
+
+\eg{
+    Consider three trials(not necessarily iid): $X_i=1$ if the $i^\text{th}$ trial is a success, 0, otherwise. Let $X=X_1+X_2+X_3$ to be the total number of successes. Suppose $\E X=1.8$.
+    \begin{enumerate}
+        \item What is the largest possible value of $\P(X=3)$? \\
+        Solution:
+        \begin{align*}
+            \P(X=3)&=\P(X\geq3) \\
+            &\leq\frac{1}{3}\E X=0.6
+        \end{align*}
+        Achieve the bound as follows: \\
+        $X_i\sim\Bern(0.6)$, $i=1,2,3$ \\
+        $X_1=X_2=X_3\implies X\sim3\cdot\Bern(0.6)$
+        \[X=\left\{\begin{array}{ll}3 & \text{wp}\;0.6 \\ 0 & \text{wp}\;0.4 \end{array}\right.\]
+        \item What is the smallest possible value of $\P(X=3)$? \\
+        Solution: 0 \\\\
+        Let $U\sim\Unif(0,1)$, we define $X_1$, $X_2$ as following
+        \[X_1=\left\{\begin{array}{ll} 0 & \text{if}\;0<U\leq1/2 \\ 1 & \text{if}\;1/2<U\leq1 \end{array}\right.\]
+        \[X_2=\left\{\begin{array}{ll} 1 & \text{if}\;0<U\leq1/2 \\ 0 & \text{if}\;1/2<U\leq1 \end{array}\right.\]
+        such that $X_1+X_2=1$ and $\E(X_1+X_2)=1$.
+        \[X_3=\left\{\begin{array}{ll} 1 & \text{if}\;0<U\leq0.8 \\ 0 & \text{if}\;0.8<U\leq1 \end{array}\right.\]
+        where $\E X_3=0.8\implies\E X=1.8$.
+    \end{enumerate}
+    %TODO
+}
+
+\thm{
+    \textbf{Strong law of large number}(pf in Section 2.8)
+    \\\\
+    Let $X_1, X_2,\dots$ be a sequence of iid r.v.s with common, finite mean $\mu$. Then 
+    \[\P(\{\omega:\lim_{n\rightarrow\infty}\Bar{X}_n=\mu\})=1.\]
+    where $\Bar{X}_n=\frac{1}{n}\sum^n_{i=1}X_i$. Often written $\Bar{X}_n\rightarrow\mu$ as $n\rightarrow\infty$ w.p. 1.
+}
+
+\thm{
+    \textbf{Central Limit Theorem}(CLT)
+    \\\\
+    Let $X_1, X_2,\dots$ be a sequence of iid r.v.s with common, finite mean $\mu$ and variance $\sigma^2$. Then, the distribution of
+    \[\frac{\Bar{X}_n-\mu}{\sigma/\sqrt{n}}\]
+    approaches that of $N(0,1)$ as $n\rightarrow\infty$.
+    \[\E(\Bar{X}_n)=\frac{1}{n}\sum^n_{i=1}\E X_i=\frac{n\mu}{n}=\mu\]
+    \begin{align*}
+        \Var(\Bar{X}_n)&=\Var\left(\frac{1}{n}\sum^n_{i=1}X_i\right)=\frac{1}{n^2}\Var\left(\sum^n_{i=1}X_i\right) \\
+        &\overset{\text{ind't}}{=}\frac{1}{n^2}\sum^n_{i=1}\Var X_i=\frac{n\sigma^2}{n^2}=\frac{\sigma^2}{n}
+    \end{align*}
+    \[\lim_{n\rightarrow\infty}\P\left(\frac{\Bar{X}_n-\mu}{\sigma/\sqrt{n}}\leq z\right)=\Phi(z)\]
+    or
+    \[\lim_{n\rightarrow\infty}\P\left(\Bar{X}_n\leq \mu+z\cdot\frac{\sigma}{\sqrt{n}}\right)=\Phi(z)\]
+    Aside: Usual proof involves the characteristic function of $X_i$, $\Phi(t)=\E(e^{iXt})$. Instead, we will assume $M_X(t)=\E(e^{Xt})$ exists in an open interval about 0.
+    \\\\
+    Let $Y_i=\frac{X_i-\mu}{\sigma}$
+    \begin{align*}
+        M_{Y_i}(t)&=\E(e^{Y_it}) \\
+        &=\E(1+Y_it+\frac{1}{2}(Y_it)^2+\frac{1}{6}(Y_it)^3+\dots) \\
+        &=1+t\E Y_i+\frac{1}{2}t^2\E(Y_i^2)+O(t^3) \\
+        &=1+\frac{1}{2}t^2+O(t^3)
+    \end{align*}
+    where $O(h)$ means that $\lim_{h\rightarrow0}O(h)=0$.
+    \\\\
+    Let $U_n=\frac{\Bar{X}_n-\mu}{\sigma/\sqrt{n}}$
+    \begin{align*}
+        M_{U_n}(t)&=\E\left(e^{t\cdot\frac{\Bar{X}_n-\mu}{\sigma/\sqrt{n}}}\right) \\
+        &=\E\left(e^{t\cdot\frac{\sqrt{n}\Bar{X}_n-\sqrt{n}\mu}{\sigma}}\right) \\
+        &=\E\left(e^{\frac{t}{\sqrt{n}}\cdot\frac{n\Bar{X}_n-n\mu}{\sigma}}\right) \\
+        &=\E\left(e^{\frac{t}{\sqrt{n}}\cdot\frac{X_1+X_2+\dots+X_n-n\mu}{\sigma}}\right) \\
+        &=\E\left(e^{\frac{t}{\sqrt{n}}\cdot\frac{X_1-\mu}{\sigma}}e^{\frac{t}{\sqrt{n}}\cdot\frac{X_2-\mu}{\sigma}}\dots e^{\frac{t}{\sqrt{n}}\cdot\frac{X_n-\mu}{\sigma}}\right) \\
+        &=\prod_{i=1}^n\E\left(e^{\frac{t}{\sqrt{n}}\cdot\frac{X_i-\mu}{\sigma}}\right) \\
+        &=\prod_{i=1}^n M_{Y_i}\left(\frac{t}{\sqrt{n}}\right) \\
+        &=\left(1+\frac{1}{2}\cdot\frac{t^2}{n}+O\left(\frac{t^3}{n^{3/2}}\right)\right)^n
+    \end{align*}
+    \[n\rightarrow\infty\implies M_{U_n}(t)=e^{\frac{1}{2}t^2}\]
+    which is the mgf of the $N(0,1)$.
+    \\\\
+    Aside: 
+    \[(1+ax)^\frac{1}{x}\xrightarrow{x\rightarrow0}e^a\]
+    
+}
+
+\eg{
+    2.50: $X$ is the number of times a fair coin flipped 40 times, lands heads up. Find the probability that $X=20$ via the normal approximation.
+    \\\\
+    $X=n\Bar{X}_n\sim\text{sum of $n$ iid $\Bern(p)$}$
+    \begin{align*}
+        &\overset{\text{CLT}}{\implies} \frac{\Bar{X}_n-p}{\sqrt{p(1-p)/n}}\rightarrow N(0,1) \\
+        &\implies \frac{X-np}{\sqrt{np(1-p)}}\rightarrow N(0,1)
+    \end{align*}
+    \begin{align*}
+        \P(X=20)&\approx\P(19.5<X\leq20.5) \\
+        &\approx\P\left(\frac{19.5-20}{\sqrt{10}}<Z\leq\frac{20.5-20}{\sqrt{10}}\right) \\
+        &=\Phi(0.1581)-\Phi(-0.1581)=0.1256
+    \end{align*}
+    where the true probability is 0.1268.
+}
+
+\end{document}

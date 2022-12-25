@@ -1,0 +1,140 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\text{Poisson}}
+\DeclareMathOperator{\Gam}{\text{Gamma}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 24}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{November 4, 2022}
+
+\begin{document}
+
+\maketitle
+
+\eg{
+    3.12: without memory $\E X=10$, with memory $\E X=6$
+}
+
+\eg{
+    3.15: $X$ is the number trials required to get $k$ successes
+    \\\\
+    $\P(X=n\mid k)$ --- compute by conditioning on outcome of first trial.
+    \[\text{1st trial}=\left\{
+        \begin{array}{ll}
+            \text{success} & \text{w.p. }p\\
+            \text{failure} & \text{w.p. }1-p
+        \end{array}\right.\]
+    \begin{align*}
+        P_{n,k}&=\P(X=n\mid k) \\
+        &=p\cdot\P(X=n-1\mid k-1)+(1-p)\P(X=n-1\mid k) \\
+        &=p\cdot\P_{n-1,k-1}+(1-p)\P_{n-1,k}
+    \end{align*}
+    where $\P(X=n-1\mid k)=0$ if $n=k$.
+    \\\\
+    \textbf{Technique for solving:}
+    \\\\
+    $\partial$ conditions: 
+    \[P_{n,1}=(1-p)^{n-1}\cdot p,\qquad P_{k,k}=p^k\]
+    Generating function:
+    \[G(x,y)=\sum_{1\leq k\leq n}P_{n,k}\cdot x^ny^k\]
+    \[G(x,y)=\frac{p\cdot xy}{1-p\cdot xy-(1-p)x}\]
+    Solution:
+    \[\P(X=n\mid k)=\begin{pmatrix}n-1 \\ k-1\end{pmatrix}p^k(1-p)^{n-k}\]
+    which is negative binomial and $n=k, k+1, \dots$
+}
+
+\subsubsection*{Computing probabilities by conditioning}
+
+\defn{
+    \[\P(A)=\E(1_A)=\E(\E(1_A\mid Y))\]
+    \[\P(A)=\E(\P(A\mid Y))\]
+}
+
+\eg{
+    3.23: An insurance co. supposes the number of accidents $N\mid\lambda$ that each of its policy holders(ph) has in a year is $\Poiss(\lambda)$ with $\lambda$ varying from ph to ph. \\\\
+    (a) If $\lambda\sim\Gam(\alpha, \beta)$, what is the probability that a randomly chosen ph has exactly $n$ accidents next year?
+    \\\\
+    Solution: $N\mid\lambda\sim\Poiss(\lambda)$, $\lambda\sim\Gam(\alpha, \beta)$
+    \begin{align*}
+        \P(N=n)&=\E(\P(N=n\mid \lambda)) \\
+        &=\E\left(e^{-\lambda}\frac{\lambda^n}{n!}\right) \\
+        &=\int^\infty_0 e^{-\lambda}\frac{\lambda^n}{n!}\frac{\beta^\alpha}{\Gamma(\alpha)}\lambda^{\alpha-1}e^{-\beta\lambda}\;d\lambda \\
+        &=\frac{\beta^\alpha}{n!\Gamma(\alpha)}\int^\infty_0\lambda^{(\alpha+n)-1}e^{-(\beta+1)\lambda}\;d\lambda \\
+        &=\frac{\beta^\alpha}{n!\Gamma(\alpha)}\cdot\frac{\Gamma(\alpha+n)}{(\beta+1)^{\alpha+n}} \\
+        &=\frac{\Gamma(\alpha+n)}{\Gamma(\alpha)n!}\left(\frac{\beta}{\beta+1}\right)^\alpha\left(1-\frac{\beta}{\beta+1}\right)^n,\qquad n=0,1,2,\dots
+    \end{align*}
+    \\\\
+    (b) Calculate $\E N$ and $\Var N$ via iteration.
+    \\\\
+    Solution: 
+    \begin{align*}
+        \E N&=\E(\E(N\mid\lambda)) \\
+        &=\E(\lambda) \\
+        &=\frac{\alpha}{\beta}
+    \end{align*}
+    where $N\mid\lambda\sim\Poiss(\lambda)$, $\lambda\sim\Gam(\alpha,\beta)$.
+    \begin{align*}
+        \Var N&=\E(\Var(N\mid\lambda))+\Var(\E(N\mid\lambda)) \\
+        &=\E(\lambda)+\Var(\lambda) \\
+        &=\frac{\alpha}{\beta}+\frac{\alpha}{\beta^2}=\frac{\alpha}{\beta^2}(\beta+1) \\
+        &>\E N
+    \end{align*}
+}
+
+\end{document}

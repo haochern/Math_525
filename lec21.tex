@@ -1,0 +1,169 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 21}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{October 28, 2022}
+
+\begin{document}
+
+\maketitle
+
+\defn{
+    \textbf{Conditional probability of continuous r.v.s}
+    \\\\
+    With discrete r.v.s, it makes sense to consider
+    \[p_{X\mid Y}(x\mid y)=\frac{p_{X,Y}(x,y)}{p_Y(y)}=\frac{\P(X=x, Y=y)}{\P(Y=y)}=\P(X=x\mid Y=y)\]
+    where $p_{X\mid Y}(x\mid y)$ is the conditional pmf.
+    \\\\
+    Continuous r.v.s joint pdf $f_{X,Y}(x,y)$
+    \begin{align*}
+        \P(X\leq x\mid y<Y\leq y+\Delta y) &= \frac{\P(X\leq x, y<Y\leq y+\Delta y)}{\P(y<Y\leq y+\Delta y)} \\
+        &= \frac{\int^x_{-\infty}\int^{y+\Delta y}_y f_{X,Y}(u,v)\;dvdu}{\int^{y+\Delta y}_y f_Y(v)\;dv}
+    \end{align*}
+    Recall 
+    \[f_Y(y)=\int^\infty_{-\infty}f_{X,Y}(x,y)\;dx\]
+    To get what we might label the conditional cdf of $X$ given $Y=y$, take a limit as $\Delta y\rightarrow0^+$
+    \begin{align*}
+        \P(X\leq x\mid y<Y\leq y+\Delta y) &\overset{\text{def'n}}{=} \lim_{\Delta y\rightarrow0^+} \frac{\int^x_{-\infty}\int^{y+\Delta y}_y f_{X,Y}(u,v)\;dvdu}{\int^{y+\Delta y}_y f_Y(v)\;dv} \\
+        &\overset{\text{L'H}}{=} \lim_{\Delta y\rightarrow0^+}\frac{\int^x_{-\infty} f_{X,Y}(u,y+\Delta y)\;du}{f_Y(y+\Delta y)} \\
+        &= \frac{\int^x_{-\infty} f_{X,Y}(u,y)\;du}{f_Y(y)}
+    \end{align*}
+    where $\P(X\leq x\mid y<Y\leq y+\Delta y)$ is the conditional cdf. Thus, conditional pdf of $X$ given $Y=y$
+    \[f_{X\mid Y}(x\mid y)=\frac{f_{X,Y}(x,y)}{f_Y(y)}\]
+    conditional expectation of $X$ given $Y=y$
+    \[\E(X\mid Y=y)=\int_{-\infty}^\infty x\cdot f_{X\mid Y}(x\mid y)\;dx\]
+    As in Section 3.2, $\E X=\E(\E(X\mid Y))=\int_{-\infty}^\infty\E(X\mid Y=y)f_Y(y)\;dy$.
+}
+
+\eg{
+    Suppose $f_{X,Y}(x,y)=6xy(2-x-y)$, $0<x,y<1$; $0$, otherwise. Compute $\E(X\mid Y=y)$. \\\\
+    Solution: First calculate $f_{X\mid Y}(x\mid y)$. Need,
+    \begin{align*}
+        f_Y(y)&=\int_{-\infty}^\infty f_{X,Y}(x,y)\;dx \\
+        &=\int_0^1 6xy(2-x-y)\;dx \\
+        &=4y-3y^2
+    \end{align*}
+    $0<x,y<1$
+    \begin{align*}
+        \implies f_{X\mid Y}(x\mid y)&=\frac{6xy(2-x-y)}{y(4-3y)} \\
+        &=\frac{6x(2-x-y)}{4-3y}
+    \end{align*}
+    $0<y<1$
+    \begin{align*}
+        \implies \E(X\mid Y=y) &= \int^1_0 x\cdot\frac{6x(2-x-y)}{4-3y}\;dx \\
+        &=\frac{5/2-2y}{4-3y}
+    \end{align*}
+    Aside: 
+    \begin{align*}
+        \E X &= \int^1_0\frac{5/2-2y}{4-3y}\cdot y(4-3y)\;dy \\
+        &=\int^1_0\left(\frac{5}{2}y-2y^2\right)\;dy=\frac{5}{4}-\frac{2}{3}=\frac{15-8}{12}=\frac{7}{12}
+    \end{align*}
+    or:
+    \[\E X = \int^1_0\int^1_0 x\cdot 6xy(2-x-y)\;dxdy=\dots=\frac{7}{12}\]
+    Aside:
+    \[\frac{5}{2}-2y < 4-3y \iff y<4-\frac{5}{2}=\frac{3}{2}\]
+}
+
+\eg{
+    Suppose $f_{X,Y}(x,y)=4y(x-y)e^{-(x+y)}$, if $0\leq y\leq x<\infty$, $f_{X,Y}(x,y)=0$, otherwise. Compute $\E(Y\mid X=x)$.
+    \\\\
+    Solution: First, compute
+    \begin{align*}
+        f_X(x) &= \int^x_0 4y(x-y)e^{-(x+y)}\;dy \\
+        &= 4e^{-x} \int^x_0(xy-y^2)e^{-y}\;dy
+    \end{align*}
+    Let $u=(xy-y^2)$ and $dv=e^{-y}\;dy$
+    \begin{align*}
+        f_X(x) &= 4e^{-x}\left[-(xy-y^2)e^{-y}\big\vert^x_{y=0}+\int^x_0(x-2y)e^{-y}\;dy\right] \\
+        &= 4e^{-x}\left[-(x-2y)e^{-y}\big\vert^x_{y=0}-2\int^x_0e^{-y}\;dy\right] \\
+        &= 4e^{-x}[xe^{-x}+x-2(1-e^{-x})] \\
+        &= 4e^{-x}[(x-2)+(x+2)e^{-x}]
+    \end{align*}
+    \begin{align*}
+        \implies f_{Y\mid X}(y\mid x) &= \frac{4y(x-y)e^{-(x+y)}}{4e^{-x}[(x-2)+(x+2)e^{-x}]}, \qquad 0\leq y\leq x \\
+        &=\frac{y(x-y)e^{-y}}{(x-2)+(x+2)e^{-x}}
+    \end{align*}
+    \begin{align*}
+        \implies \E(Y\mid X=x) &= \int^\infty_{-\infty} y\cdot f_{Y\mid X}(y\mid x)\;dy \\
+        &=\int^x_0 y\cdot\frac{y(x-y)e^{-y}}{(x-2)+(x+2)e^{-x}}\;dy \\
+        &\qquad\qquad\vdots \\
+        &=\frac{(2x-6)+(x^2+4x+6)e^{-x}}{(x-2)+(x+2)e^{-x}}, \qquad 0\leq x<\infty
+    \end{align*}
+}
+
+\subsection*{Computing expectation via conditioning}
+
+\eg{
+    3.11: Mean of a geometric distribution.
+    \\\\
+    A coin, with probability $p$ of coming up heads, is flipped until the first head appear. What is the expected number of flips required?
+    \\\\
+    Solution: Let $Y=1$ if the first flip is a head; $0$, otherwise.
+    \begin{align*}
+        \E N &= \E(\E(N\mid Y)) \\
+        &=\E(N\mid Y=1)\P(Y=1)+\E(N\mid Y=0)\P(Y=0)
+    \end{align*}
+    \[\E N=1\cdot p+(1+\E N)(1-p)\]
+    \[\E N(1-(1-p))=p+(1-p)\implies \E N=\frac{1}{p}\]
+    Aside: $N$ is the number of flips until first head.
+    \[\P(N=n)=(1-p)^{n-1}\cdot p, \qquad n=1,2,\dots\]
+}
+
+\end{document}

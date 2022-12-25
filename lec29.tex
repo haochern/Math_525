@@ -1,0 +1,177 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+\usepackage{svg}
+\usepackage{float}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\text{Poisson}}
+\DeclareMathOperator{\Gam}{\text{Gamma}}
+\DeclareMathOperator{\Exp}{\text{Exp}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 29}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{November 21, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Exponential Distribution and Poisson Process}
+
+\defn{
+Exponential $X\sim\Exp(\lambda)$
+\[f_X(x)=\lambda e^{-\lambda x},\;x\geq0\]
+\[F_X(x)=\left\{\begin{array}{lc} 1-e^{-\lambda x} & x\geq0 \\ 0 & x<0 \end{array}\right.\]
+\[S_X(x)=\left\{\begin{array}{lc} e^{-\lambda x} & x\geq0 \\ 1 & x<0 \end{array}\right.\]
+\[\E X=\int^\infty_0 S_X(x)\;dx=\frac{1}{\lambda}, \qquad \Var X=\frac{1}{\lambda^2}\]
+\[M_X(t)=\frac{\lambda}{\lambda-t}, \qquad t<\lambda\]
+Memoryless Property:
+\begin{align*}
+    \P(X>s+t\mid X>t)&=\frac{\P(X>s+t)}{\P(X>t)} \\
+    &=\frac{e^{-\lambda(s+t)}}{e^{-\lambda t}} \\
+    &=e^{-\lambda s}, \qquad\text{$t$ is independent}
+\end{align*}
+}
+
+\eg{
+5.2 $X\sim\Exp(\frac{1}{10})$, $\E X=10$
+\begin{enumerate}
+    \item $\P(X>15)=e^{-\frac{15}{10}}=e^{-\frac{3}{2}}$
+    \item $\P(X>15\mid X>10)=e^{-\frac{5}{10}}=e^{-\frac{1}{2}}$
+\end{enumerate}
+}
+
+\defn{
+Hazard rate function for a continuous random variable $X$ with pdf $f$ and cdf $F$.
+\begin{align*}
+    &\lim_{\Delta t\rightarrow 0^+}\frac{\P(t<X\leq t+\Delta t\mid X>t)}{\Delta t} \\
+    =&\lim_{\Delta t\rightarrow 0^+}\frac{\P(t<X\leq t+\Delta t)}{\Delta t\cdot \P(X>t)} \\
+    =&\frac{1}{\P(X>t)}\lim_{\Delta t\rightarrow 0^+}\frac{\P(t<X\leq t+\Delta t)}{\Delta t} \\
+    =&\frac{f(t)}{1-F(t)}:=r(t)\qquad\text{(hazard rate fn)}
+\end{align*}
+\[X\sim\Exp(\lambda):r(t)=\frac{\lambda e^{-\lambda t}}{e^{-\lambda t}}=\lambda\;\qquad\text{(constant)}\]
+}
+
+\recap{
+From Chapter 2, if $X_1, X_2, \dots, X_n$ are iid $\Exp(\lambda)$ then $X_1+X_2+\dots+X_n\sim\Gam(n, \lambda)$ can show via mgf's because mgf of $\Gam(\alpha, \lambda)$ is $\left(\frac{\lambda}{\lambda-t}\right)^\alpha$.
+}
+
+\eg{
+Suppose $X_i\sim\Exp(\lambda_i)$, $i=1,2$ independent. What is $\P(X_1<X_2)$?
+\begin{figure}
+  \centering
+  \includesvg{lec29/l29f1.svg}
+  \caption{$x_2=x_1$, integrate joint pdf over shaded region}
+\end{figure}
+\begin{align*}
+    \P(X_1<X_2)&=\E_{X_1}(\P(X_1<X_2\mid X_1)) \\
+    &=\int^\infty_0 \P(X_1<X_2\mid X_1=x)\lambda_1e^{-\lambda_1 x}\;dx \\
+    &=\int^\infty_0 \P(X_2>x)\lambda_1e^{-\lambda_1 x}\;dx \\
+    &=\int^\infty_0 e^{-\lambda_2 x}\cdot\lambda_1 e^{-\lambda_1 x}\;dx \\
+    &=\lambda_1 \int^\infty_0 e^{-(\lambda_1+\lambda_2)x}\;dx \\
+    &=\frac{\lambda_1}{\lambda_1+\lambda_2}
+\end{align*}
+\begin{align*}
+    \text{large }\lambda_1&\implies\E(X_1)=\frac{1}{\lambda_1}\text{ is small} \\
+    &\implies X_1<X_2\text{ is more likely} \\
+    &\implies \frac{\lambda_1}{\lambda_1+\lambda_2}\text{ is close to 1}
+\end{align*}
+}
+
+\eg{
+Suppose $X_i\sim\Exp(\lambda_i)$, independent, $i=1,2,\dots,n$, Let $Y=\min(X_1, X_2, \dots, X_n)$.
+\begin{align*}
+    \P(Y>t)&=\P(\min(X_1, X_2, \dots, X_n>t)) \\
+    &=\P(X_1>t, \dots, X_n>t) \\
+    &=\prod^n_{i=1}\P(X_i>t) \\
+    &=\prod^n_{i=1}e^{-\lambda_i\dot t} \\
+    &=e^{-(\lambda_1+\dots+\lambda_n)t}
+\end{align*}
+\[\implies Y\sim\Exp(\lambda_1+\dots+\lambda_n)\]
+}
+
+\eg{
+5.8 Suppose you arrive at a post office with two clerks who are both busy, but no one else is waiting in line. If service time for clerk $i$ is $\Exp(\lambda_i)$, $i=1, 2$, find $\E T$, in which $T$ is the amount of time you spend in the post office.
+\\\\
+Solution: Let $R_i$ to be the remaining service time of the customer currently with clerk $i$, $i=1,2$, and let $S$ be your service time. Then, 
+\[T=\min(R_1, R_2)+S\]
+\[\implies\E T=\frac{1}{\lambda_1+\lambda_2}+\E S\]
+\begin{align*}
+    \E S&=\E(S\mid R_1<R_2)\P(R_1<R_2)+\E(S\mid R_1>R_2)\P(R_1>R_2) \\
+    &=\frac{1}{\lambda_1}\cdot\frac{\lambda_1}{\lambda_1+\lambda_2}+\frac{1}{\lambda_2}\cdot\frac{\lambda_2}{\lambda_1+\lambda_2} \\
+    &=\frac{2}{\lambda_1+\lambda_2}
+\end{align*}
+\[\therefore \E T=\frac{3}{\lambda_1+\lambda_2}\]
+}
+
+\eg{
+5.1: Receive money at random rate $\R(t)$ as long as you are alive. Suppose your time of death $T\sim\Exp(\lambda)$. Then, your expected total amount received is $\E(\int^T_0R(t)\;dt)$ Show the expectation equals 
+\[\int^\infty_0 e^{-\lambda t}\E(R(t))\;dt\]
+Solution:
+\begin{align*}
+    \int^T_0 R(t)\;dt&=\int^T_0 R(t)\cdot1\;dt+\int^\infty_T R(t)\cdot0\;dt \\
+    &=\int^\infty_0 R(t)\cdot\textbf{1}_{\{t<T\}}\;dt \\
+\end{align*}
+\begin{align*}
+    \E\left(\int^T_0 R(t)\;dt\right)&=\int^\infty_0 \E\left(R(t)\textbf{1}_{\{t<T\}}\right)\;dt \\
+    &=\int^\infty_0 \E(R(t))\E\left(\textbf{1}_{\{t<T\}}\right)\;dt \\
+    &=\int^\infty_0 \E(R(t))\P(T>t)\;dt \\
+    &=\int^\infty_0 e^{-\lambda t}\E(R(t))\;dt
+\end{align*}
+}
+
+\end{document}

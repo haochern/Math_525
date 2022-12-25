@@ -1,0 +1,141 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\text{Poisson}}
+\DeclareMathOperator{\Gam}{\text{Gamma}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 25}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{November 7, 2022}
+
+\begin{document}
+
+\maketitle
+
+\eg{
+    3.60: Two players alternate flipping a coin that comes up heads w.p. $p$. The first one to obtain a head is the winner. Calculate the probability that the first player to flip the coin ultimately wins the game. Call the probability $f(p)$.
+    \\\\
+    Solution: Let $Y=1$ if the first flip is a head; 0, else.
+    \begin{align*}
+        f(p)&=\P(\text{I wins}\mid Y=1)\P(Y=1)+\P(\text{I wins}\mid Y=0)\P(Y=0) \\
+        &=1\cdot p+(1-f(p))(1-p) \\
+        &=p+1-f(p)-p+p\cdot f(p) \\
+        &=1-f(p)+p\cdot f(p)
+    \end{align*}
+    \[f(p)(2-p)=1 \implies f(p)=\frac{1}{2-p}>\frac{1}{2}\]
+}
+
+\eg{
+    3.29: Let $U_1, U_2, \dots$ be a sequence of iif $\Unif(0,1)$ r.v.s. Let $N=\min\{n\geq2:U_n>U_{n-1}\}$ and let $M=\min\{n\geq1:U_1+\dots+U_n>1\}$. Surprisingly, $N$ and $M$ have the same probability distribution with common mean $e$.
+    \\\\
+    Solution:
+    \[\P(N>n)=\P(U_1>U_2>\dots>U_n)=\frac{1}{n!}\]
+    because all $n!$ orderings of $\{U_1,U_2,\dots,U_n\}$ are equally likely.
+    \\\\
+    To show $\P(M>n)=\frac{1}{n!}$, we use induction. Let $M(x)=\min\{n\geq1: U_1+\dots+U_n\geq x\}$, for $0\leq x\leq1$. Note that $M=M(1)$. Via induction, we now show that $\P(M(x)> n)=\frac{x^n}{n!}$. For $n=1$, 
+    \[\P(M(x)>1)=\P(U_1\leq x)=x=\frac{x^1}{1!}\]
+    So, assume that for some $n\geq1$ and for all $0\leq x\leq 1$, we have $\P(M(x)>n)=\frac{x^n}{n!}$. To compute $\P(M(x)>n+1)$, condition on $U_1$:
+    \begin{align*}
+        \P(M(x)>n+1)&=\E(\P(M(x)>n+1\mid U_1)) \\
+        &=\int^1_0 \P(M(x)>n+1\mid U_1)\;du \\
+        &=\int^x_0\P(M(x)>n+1\mid U_1=u)\;du+\int^1_x\P(M(x)>n+1\mid U_1=u)\;du \\
+        &=\int^x_0\P(M(x-u)>n)\;du \\
+        &=\int^x_0\frac{(x-u)^n}{n!}\;du \\
+        &=-\frac{(x-u)^{n+1}}{(n+1)!}\bigg\vert^x_{u=0} \\
+        &=\frac{x^{n+1}}{(n+1)!}
+    \end{align*}
+    where $U_1+U_2+\dots+U_{n+1}\leq x$ implies $U_2+\dots+U_{n+1}\leq x-u$ and $\P(M(x)>n+1\mid U_1=u)=0$ since $U_1=u$ means $M(x)=1$.
+    \[\P(M>n)=\frac{1}{n!}=\P(N>n)\]
+    \[\implies \E M=\E N=\int^\infty_0\P(N>x)\;dx=\frac{1}{0!}+\frac{1}{1!}+\frac{1}{2!}+\frac{1}{3!}+\dots\]
+    \[\E M=\E N = \sum^\infty_{n=0}\frac{1^n}{n!}=e^1=e\]
+}
+
+\subsection*{Poisson Distribution}
+\defn{
+    \textbf{Composition Theorem:} 
+    \\\\
+    If $N_j\sim\Poiss(\lambda_j)$, $j=1,2,3,\dots, m$ with the $N_j$ independent, then $N=\sum^m_{j=1}N_j\sim\Poiss(\lambda)$, in which $\lambda=\sum^m_{j=1}\lambda_j$.
+    Before we prove this, let's re-calculate the mgf of $N\sim\Poiss(\lambda)$
+    \\\\
+    Aside:
+    \begin{align*}
+        M_N(t)&=\E(e^{Nt}) \\
+        &=\sum^\infty_{n=0}e^{nt}\cdot e^{-\lambda}\frac{\lambda^n}{n!} \\
+        &=e^{-\lambda}\sum^\infty_{n=0}\frac{(\lambda e^t)^n}{n!} \\
+        &=e^{-\lambda}e^{\lambda e^t}=e^{\lambda(e^t-1)}
+    \end{align*}
+    Proof:
+    \begin{align*}
+        M_N(t)&=\prod^m_{j=1}M_{N_j}(t) \\
+        &=\prod^m_{j=1}e^{\lambda_j(e^t-1)} \\
+        &=e^{\sum^m_{j=1}(\lambda_j(e^t-1))} \\
+        &=e^{(\sum_{j=1}^m\lambda_j)(e^t-1)}
+    \end{align*}
+}
+
+\defn{
+    \textbf{Decomposition Theorem:} 
+    \\\\
+    Suppose the number of events $N\sim\Poiss(\lambda)$. Suppose each event can be classified $m$ to one of $m$ types with corresponding probabilities $p_1, p_2, \dots, p_m$ with $\sum^m_{j=1}p_j=1$. We assume the occurrence of one type is independent of the occurrence of any type. Then, the number of events $N_1, N_2, \dots, N_m$ corresponding to types $1, 2, \dots, m$ are independent Poisson r.v.s with parameters $\lambda p_1, \lambda p_2, \dots, \lambda p_m$.
+    \\\\
+    Notation: $N_j\sim\Poiss(\lambda p_j)$, $j=1,2,\dots,m$ and $N_1, N_2, \dots, N_m$ are independent, 
+    \[N=\sum^m_{j=1}N_j\]
+}
+
+
+\end{document}

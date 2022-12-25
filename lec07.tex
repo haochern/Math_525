@@ -1,0 +1,146 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 07}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{September 14, 2022}
+
+\begin{document}
+
+\maketitle
+
+\recap{R.v. $X:\Omega\rightarrow\R$ such that $\{\omega:X(\omega)\leq x\}\in\F$, $\forall x\in\R$, cdf $F(x)=\P(X\leq x)$, $x\in\R$.
+}
+
+Properties of the cdf $F$:
+\begin{enumerate}
+    \item $F$ is non-decreasing on $\R$
+    \item $\lim_{x\rightarrow-\infty}F(x)=0$, $\lim_{x\rightarrow\infty}F(x)=1$
+    \item $F$ is right-continuous
+\end{enumerate}
+
+\subsection*{Discrete random variables}
+
+\defn{ Discrete r.v. has a right-continuous, non-decreasing step function as its cdf.
+\[P(X=x)=F(X\leq x)-F(X<x)\]
+where $\P(X=x)$ is non-zero, we have what we call the probability mass function(pmf).
+}
+
+\defn{$X\sim\text{Bernoulli}(p)$, $0<p<1$
+\[P_X(x)=\left\{\begin{array}{lc}1-p&x=0\\p&x=1\end{array}\right.\]
+}
+
+\defn{$X\sim\text{Binomial(n,p)}$ \\
+Fact: $X\sim X_1+X_2+\dots+X_n$ where $X_1,X_2,\dots,X_n$ are independent $\text{Bernoulli}(p)$. \\
+\[P(k)=\begin{pmatrix}n\\k\end{pmatrix}p^k(1-p)^{n-k}, \quad k=0,1,2,\dots\]
+where 
+\[\begin{pmatrix}n\\k\end{pmatrix}=\frac{n!}{k!(n-k)!},\quad0!=1.\]
+To verify, 
+\[\sum^n_{k=0}\begin{pmatrix}n\\k\end{pmatrix}p^k(1-p)^{n-k}=(p+(1-p))^n=1^n=1.\]
+}
+
+\defn{$X\sim\text{Geometric(p)}$ \\
+= "time" of the first success for an independent sequence of Bernoulli experiments.
+\[P_X(k)=\P(X=k)=(1-p)^{k-1}\cdot p,\quad k=1, 2, \dots\]
+I have seen the $\text{Geom}(p)$ defined as the \# of failures before the first success. Call that $Y$,
+\[P_Y(k)=(1-p)^k\cdot p\]
+\[Y+1\sim X\] 
+which means that they have same distribution. \\
+To verify, 
+\begin{align*}
+    \sum^\infty_{k=0}P_X(k)&=\sum^\infty_{k=0}(1-p)^{k-1}\cdot p \\
+    &=p\{1+(1-p)+(1-p)^2+\dots\} \\
+    &=p\cdot\frac{1-0}{1-(1-p)}=\frac{p}{p}=1
+\end{align*}
+
+The $\text{Geom}(p)$ r.v satisfies a memory less property:
+\begin{align*}
+    \P(X=n+k\mid X>n)&=\frac{\P(X=n+k, X>n)}{\P(X>n)} \\
+    &=\frac{\P(X=n+k)}{\P(X>n)} \\
+    &=\frac{(1-p)^{n+k-1}\cdot p}{\sum^\infty_{j=n+1}(1-p)^{j-1}\cdot p} \\
+    &= \frac{(1-p)^{n+k-1}\cdot p}{\frac{(1-p)^n\cdot p-0}{1-(1-p)}} \\
+    &=\frac{(1-p)^{n+k-1}\cdot p}{(1-p)^n} \\
+    &=(1-p)^{k-1}\cdot p \\
+    &=\P(X=k)
+\end{align*}
+}
+
+\defn{$X\sim\text{Poisson}(\lambda)$
+\[p(k)=e^{-\lambda}\cdot\frac{\lambda^k}{k!},\quad k=0, 1, 2, \dots\]
+The $\text{Poisson}(\lambda)$ is the limiting distinction of the $\text{Bin}(n, p)$ as $n\rightarrow\infty$ with $np=\lambda$ fixed. Intuitive calculation to show this: for a fixed $k<<n$ and for $X\sim\text{Bin}(n, p)$,
+\begin{align*}
+    P(k)=&\P(X=k)=\begin{pmatrix}n\\k\end{pmatrix}p^k(1-p)^{n-k} \\
+    =&\frac{n!}{k!(n-k)!}\cdot p^k(1-p)^{n-k} \\
+    =&\frac{1}{k!}\cdot\frac{n!}{(n-k)!}\cdot\left(\frac{p}{1-p}\right)^k(1-p)^n, \quad\text{where $\frac{n!}{(n-k)!}\approx n^k$ as $k<<n$} \\
+    \approx& \frac{1}{k!}\cdot\left(\frac{np}{1-p}\right)^k(1-p)^n \\
+    =&\frac{1}{k!}\cdot\left(\frac{\lambda}{1-\frac{\lambda}{n}}\right)^k\left(1-\frac{\lambda}{n}\right)^n \\
+    \xrightarrow{n\rightarrow\infty}&\frac{1}{k!}\cdot\lambda^k\cdot e^{-\lambda}
+\end{align*}
+Aside:
+\begin{align*}
+    \lim_{n\rightarrow\infty}\ln{\left(1-\frac{\lambda}{n}\right)^n}&=\ln{y} \\
+    \lim_{n\rightarrow\infty}\frac{\ln{\left(1-\frac{\lambda}{n}\right)}}{\frac{1}{n}}&=\ln{y} \\
+    \lim_{x\rightarrow0}\frac{\ln{(1-\lambda x)}}{x}&=\ln{y} \\
+    -\lambda&=\ln{y} \\
+    y&=e^{-\lambda}
+\end{align*}
+}
+
+
+
+%limiting distinction????
+\end{document}

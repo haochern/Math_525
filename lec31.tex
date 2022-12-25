@@ -1,0 +1,163 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\mathcal{P}}
+\DeclareMathOperator{\Gam}{\text{Gamma}}
+\DeclareMathOperator{\Exp}{\text{Exp}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 31}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{November 30, 2022}
+
+\begin{document}
+
+\maketitle
+
+\recap{
+$\{N(t): t\geq 0\}$ is a $\mathcal{P}\Poiss(\lambda)$ if
+\begin{itemize}
+    \item counting process
+    \item independent, stationary increment
+    \item $N(t)\sim\Poiss(\lambda t)$
+\end{itemize}
+Showed that $T_1, T_2, \dots$ of interarrival times is iid $\Exp(\lambda)$
+\begin{itemize}
+    \item $\P(N(t)=0)=\P(T_1>t)=e^{-\lambda t}$
+    \[\therefore N(t)\sim\Poiss(\lambda t)\implies T_1\sim\Exp(\lambda)\]
+    \item independent increments of $\{N(t)\}$ drives the independence of $T_1, T_2, \dots$
+    \item stationary increments of $\{N(t)\}$ drives the identical distributions of $T_1, T_2, \dots$
+\end{itemize}
+Noted that:
+\begin{description}
+    \item $T_i$ is random between event $i-1$ and $i$.
+    \item $N(t)$ is the number of events during $[0,t]$ or $(0,t]$ because $N(0)=0$.
+    \item $S_n=T_1+\dots+T_n$ is the time of events $n$.
+\end{description}
+}
+
+\eg{
+Another quantity of interest is  $S_n=T_1+T_2+\dots+T_n$ because $T_i$ are iid $\Exp(\lambda)$, $S_n\sim\Gam(n,\lambda)$.
+\\\\
+For $n=1,2,\dots$
+\begin{align*}
+    F_{S_n}(t)&=\P(S_n\leq t) \\
+    &=\P(N(t)\geq n) \\
+    &=\sum^\infty_{k=n}\P(N(t)=k) \qquad(N(t)\sim\Poiss(\lambda t)) \\
+    &=\sum^\infty_{k=n}e^{-\lambda t}\cdot\frac{(\lambda t)^k}{k!}
+\end{align*}
+\begin{align*}
+    f_{S_n}(t)&=F_{S_n}'(t) \\
+    &=\sum^\infty_{k=n}\left(-\lambda e^{-\lambda t}\frac{(\lambda t)^k}{k!}+e^{-\lambda t}\cdot\frac{\lambda^k\cdot t^{k-1}}{(k-1)!}\right) \\
+    &=e^{-\lambda t}\sum^\infty_{k=n}\left(\frac{\lambda^k\cdot t^{k-1}}{(k-1)!}-\frac{(\lambda t)^k}{k!}\right) \\
+    &=\lambda e^{-\lambda t}\frac{(\lambda t)^{n-1}}{(n-1)!} \qquad\text{(telescoping sum)} \\
+    &=\frac{\lambda^n}{\Gamma(n)}t^{n-1}e^{-\lambda t}
+\end{align*}
+\[\implies S_n\sim\Gam(n, \lambda)\]
+}
+
+\eg{
+5.13: Suppose people immigrate into a territory at a Poisson rate of $\lambda=1$ per day.
+\begin{enumerate}
+    \item What is the expectation time until the $10^{th}$ immigrant arrives?
+    \\\\
+    Answer: $\E S_{10}=\frac{10}{1}=10$, $S_{10}\sim\Gam(10, 1)$
+    
+    \item What is the probability that the elapsed time between the $10^{th}$ and $11^{th}$ arrival exceeds two days?
+    \\\\
+    Answer: $\P(T_{11}>2)=e^{-\lambda t}=e^{-1\cdot 2}=e^{-2}$ %????
+    
+    \item Given that four people have arrived by the end of the sixth day, what is the expected time until the tenth immigrant arrives?
+    \\\\
+    Answer: $S_{10}=\{T_1+\dots+T_4\}(6)+T_5+\dots+T_{10}$
+    \[\E(S_{10}\mid N(6)=4)=6+\E(T_5+\dots+T_{10})=6+6=12\] where $(T_5+\dots+T_{10})\sim S_6$.
+    
+    \item $\Var(N(10)\mid N(6)=4)$
+    \\\\
+    Answer:
+    \begin{align*}
+        &\Var(N(10)\mid N(6)=4) \\
+        =&\Var((N(10)-N(6))+N(6)\mid N(6)=4) \\
+        =&\Var(N(10)-N(6)\mid N(6)=4)+\Var(N(6)\mid N(6)=4) \\
+        =&\Var(N(10)-N(6))+\Var(4) \\
+        =&\Var(N(10-6)) \\
+        =&\Var(N(4)) \qquad(N(4)\sim\Poiss(4\lambda)) \\
+        =&4\lambda=4
+    \end{align*}
+    
+    \item $\Var(S_{10}\mid N(6)=4)$
+    Answer:
+    \begin{align*}
+        \Var(S_{10}\mid N(6)=4)&=\Var(6+S_6) \\
+        &=\Var S_6=\frac{6}{1^2}=6
+    \end{align*}
+\end{enumerate}
+}
+
+\subsection*{5.3.3 Further properties of $\mathcal{P}\Poiss$s}
+
+\defn{
+Decomposing a $\mathcal{P}\Poiss$: Suppose that each event can be categorized (independently of other events) into one of $m$ types with probabilities $p_j$ such that $\sum^m_{j=1}p_j=1$. Let $N_j(t)$ to be the number of events of type $j$ during $(0,t]$, $j=1,2,\dots,m$. Then, $\{N_j(t)\}$ is a $\mathcal{P}\Poiss(\lambda p_j)$ and the processes $\{N_1(t), N_2(t),\dots,N_m(t)\}$ are independent.
+}
+
+\eg{
+Continue with 5.13. Immigrants arrive according to a $\mathcal{P}\Poiss(1)$. Suppose we can categorize immigrants according to country of origin, and suppose an immigrant arriving from one country is independent of an immigrant arriving from another country.
+\\\\
+Country 1 vs Everyone else (m=2) with corresponding probabilities $2/3$ and $1/3$. Then, immigrants from country 1 arrive according to a $\mathcal{P}\Poiss(2/3\cdot1)=\mathcal{P}\Poiss(2/3)$.
+}
+
+\end{document}

@@ -1,0 +1,154 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\text{Poisson}}
+\DeclareMathOperator{\Gam}{\text{Gamma}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 28}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{November 14, 2022}
+
+\begin{document}
+
+\maketitle
+
+\defn{
+    \textbf{Stochastic Process}
+    \\\\
+    $\{X_t\}_{t\in I}$ where $X_t$ is a random variable, or the function from $\Omega\rightarrow\R$ such that $\{\omega:X_t(\omega)\leq x\}\in\F_t$, $\forall x\in \R$, $I=\{0,1,2,3,\dots\}$, or $I=\{0,1,2,\dots,T\}$, or $I=[0,T]$, or $I=[0,\infty)$.
+    \\\\
+    Intuition: $\F_t$ represents info we have at time $t$, As time $t$ progresses, we anticipate that we will have more info so that $\F_t\subset\F_s$, $t\leq s$.
+    \\\\
+    Special class of stochastic processes is the class of Markov processes:
+    \[\P(X_t\leq x\mid X_s, \forall s\in[a,b])=\P(X_t\leq x\mid X_b), \qquad a<b<t\]
+    \\\\
+    Random walk: Suppose $X_0=2$, then 
+    \begin{align*}
+        \P(X_1=3\mid X_0=2)&=p \\
+        \P(X_1=1\mid X_0=2)&=1-p
+    \end{align*}
+    More generally,
+    \[\P(X_{n+1}=j\mid X_n=i)=\left\{\begin{array}{cc}
+        p & \text{if\;\;}j=i+1 \\
+        1-p & \text{if\;\;}j=i-1
+    \end{array}\right.\]
+}
+
+\defn{
+    Gambler's Ruin Problem
+    \\\\
+    For each play of the game, the gambler wins \$1 w.p. $p$, and loses \$1 w.p. $1-p$. Let $X_n$ is gambler's fortune at time $n=0,1,2,\dots$. Find the probability $P_i$ that if the gambler starts with \$$i$, then gambler's fortune will reach \$$N$ before reaching \$0, $\forall i=0,1,\dots,N$.
+    \\\\
+    Boundary condition: $P_0=0$, $P_N=1$.
+    \\\\
+    For $i=1,2,\dots, N-1$,
+    \begin{align*}
+        P_i&=\P(\text{reaching $N$ before 0}\mid X_0=i) \\
+        &=\E(\P(\text{reaching $N$ before 0}\mid X_0=i, X_1)) \\
+        &=\P(\text{reaching $N$ before 0}\mid X_0=i, X_1=i+1)\P(X_1=i+1\mid X_0=i) \\
+        &+\P(\text{reaching $N$ before 0}\mid X_0=i, X_1=i-1)\P(X_1=i-1\mid X_0=i) \\
+        &=\P(\text{reaching $N$ before 0}\mid X_1=i+1)\cdot p+\P(\text{reaching $N$ before 0}\mid X_1=i-1)\cdot(1-p)
+    \end{align*}
+    \begin{align*}
+        P_i&=p\cdot P_{i+1}+(1-p)\cdot P_{i-1} \\
+        (p+(1-p))\cdot P_i&=p\cdot P_{i+1}+(1-p)\cdot P_{i-1} \\
+        (1-p)(P_i-P_{i-1})&=p(P_{i+1}-P_i)
+    \end{align*}
+    \begin{align*}
+        \implies P_{i+1}-P_i&=\frac{1-p}{p}(P_i-P_{i-1}) \\
+        &=\left(\frac{1-p}{p}\right)^2(P_{i-1}-P_{i-2}) \\
+        &\qquad\vdots \\
+        &=\left(\frac{1-p}{p}\right)^i(P_1-P_0)
+    \end{align*}
+    \begin{align*}
+        &\implies P_{i+1}-P_i=\left(\frac{1-p}{p}\right)^i P_1 \\
+        &\implies\sum^i_{j=0}(P_{j+1}-P_j)=\left(\sum^i_{j=0}\left(\frac{1-p}{p}\right)^j\right) P_1 \\
+        &\implies P_{i+1}=\left(\sum^i_{j=0}\left(\frac{1-p}{p}\right)^j\right)\cdot P_1
+    \end{align*}
+    1). 
+    \[p=\frac{1}{2}\implies\frac{1-p}{p}\implies P_{i+1}=(i+1)P_1\]
+    \[1=P_N=N\cdot P_1\implies P_1=\frac{1}{N}\implies P_i=\frac{i}{N}\]
+    \\\\
+    2). 
+    \[p\neq\frac{1}{2}\implies\frac{1-p}{p}\neq1\implies P_{i+1}=\frac{1-\left(\frac{1-p}{p}\right)^{i+1}}{1-\frac{1-p}{p}}\cdot P_1\]
+    \[1=P_N=\frac{1-\left(\frac{1-p}{p}\right)^N}{1-\frac{1-p}{p}}\cdot P_1\]
+    \[\implies P_1=\frac{1-\frac{1-p}{p}}{1-\left(\frac{1-p}{p}\right)^N}\]
+    \begin{align*}
+        \implies P_i&=\frac{1-\left(\frac{1-p}{p}\right)^i}{1-\frac{1-p}{p}}\cdot\frac{1-\frac{1-p}{p}}{1-\left(\frac{1-p}{p}\right)^N} \\
+        &=\frac{1-\left(\frac{1-p}{p}\right)^i}{1-\left(\frac{1-p}{p}\right)^N}, \qquad i=0,1,2,\dots,N
+    \end{align*}
+    Suppose $N\rightarrow\infty$, 
+    \\\\
+    1). for any fixed $i$
+    \[p=\frac{1}{2}\implies\lim_{N\rightarrow\infty}P_i=\lim_{N\rightarrow\infty}\frac{1}{N}=0\]
+    \\\\
+    2a).
+    \[p<\frac{1}{2},\;\frac{1-p}{p}>1\implies\lim_{N\rightarrow\infty}P_i=0\]
+    \\\\
+    2b).
+    \[p>\frac{1}{2},\;\frac{1-p}{p}<1\implies\lim_{N\rightarrow\infty}P_i=1-\left(\frac{1-p}{p}\right)^i\]
+    \begin{align*}
+        i\uparrow&\implies\left(\frac{1-p}{p}\right)^i\downarrow \\
+        &\implies1-\left(\frac{1-p}{p}\right)^i\uparrow
+    \end{align*}
+}
+
+
+
+
+\end{document}

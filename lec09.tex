@@ -1,0 +1,159 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\natures}{\mathbb{N}}
+\newcommand{\N}{\natures}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 09}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{September 19, 2022}
+
+\begin{document}
+
+\maketitle
+
+\recap{Continuous r.v. is one for which $\exists f$ defined on $\R$ such that
+\[F(x)=\int_{-\infty}^x f(y)\;dy, \qquad F'(x)=f(x)\]}
+
+\defn{$X\sim U(a, b)$
+\[f(x)=\frac{1}{b-a}, \qquad a<x<b\]
+\[F(x)=\left\{\begin{array}{lc}0&x<a\\\frac{x-a}{b-a}&a\leq x<b\\1&x\geq b\end{array}\right.\]
+If $X$ is a continuous r.v., then $\P(X=x)=0,\;\forall x\in\R$
+}
+
+\defn{$X\sim N(\mu, \sigma^2)$
+\[f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}\]
+\[F(x)=\int^x_{-\infty}\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}\left(\frac{y-\mu}{\sigma}\right)^2}\;dy\]
+Let $z=\frac{y-\mu}{\sigma}$, $dz=\frac{dy}{\sigma}$,
+\[F(x)=\frac{1}{\sqrt{2\pi}}\int^{\frac{x-\mu}{\sigma}}_{-\infty}e^{-\frac{1}{2}z^2}\;dz\]
+which is similar to pdf of $N(0, 1)$. 
+\\\\
+Let $\Phi$ denote the cdf of $N(0, 1)$. Then, if $X\sim N(\mu, \sigma^2)$, then
+\[F(x)=\Phi\left(\frac{x-\mu}{\sigma}\right)\]
+Let $Y=e^X$, then $Y\sim\text{lognormal}(\mu, \sigma)$. So, $Y\sim\text{logN}(\mu, \sigma)\iff\ln{Y}\sim N(\mu, \sigma^2)$
+\begin{align*}
+    F_Y(y)&=\P(Y\leq y)=\P(e^X\leq y) \\
+    &=\P(X\leq \ln{y})=F_X(\ln{y}) \\
+    &=\Phi\left(\frac{(\ln{y})-\mu}{\sigma}\right)
+\end{align*}
+for $y>0$,
+\[\frac{d}{dy}F_Y(y)=\frac{1}{y}f_X(\ln{y})=\frac{1}{y}\cdot\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}\left(\frac{\ln{y}-\mu}{\sigma}\right)^2}.\]
+}
+
+\defn{$X\sim \text{Gamma}(\alpha, \lambda)$
+\[f(x)=\frac{\lambda^\alpha}{\Gamma(\alpha)}x^{\alpha-1}e^{-\lambda x}, \qquad x>0\]
+where $\alpha, \lambda$ are positive parameters.
+\begin{align*}
+    \Gamma(\alpha)&=\text{gamma function} \\
+    &=\int^\infty_0 x^{\alpha-1}e^{-x}\;dx, \qquad\alpha>0
+\end{align*}
+Properties of Gamma function:
+\begin{enumerate}
+    \item \[\Gamma(1)=\int_0^\infty e^{-x}\;dx=-e^{-x}\bigg\vert^\infty_0=1\]
+    \item For $\alpha>0$,
+        \begin{align*}
+            \Gamma(\alpha+1)&=\int_0^\infty x^\alpha e^{-x}\;dx \\
+            &=-x^\alpha e^{-x}\bigg\vert^\infty_0+\int_0^\infty \alpha x^{\alpha-1} e^{-x}\;dx \\
+            &=\alpha\int_0^\infty x^{\alpha-1} e^{-x}\;dx \\
+            &=\alpha\Gamma(\alpha)
+        \end{align*}
+        \begin{align*}
+            \Gamma(2)&=1\Gamma(1)=1 \\
+            \Gamma(3)&=2\Gamma(1)=2 \\
+            \Gamma(4)&=3\Gamma(3)=3! \\
+            \vdots \\
+            \Gamma(n)&=(n-1)!,\qquad n\in\N
+        \end{align*}
+\end{enumerate}
+Claim:
+\[\int_0^\infty\frac{\lambda^\alpha}{\Gamma(x)}x^{\alpha-1}e^{-\lambda x}\;dx=1\]
+Let $y=\lambda x$, $dy=\lambda dx$,
+\begin{align*}
+    \text{lhs}&=\frac{1}{\Gamma(\alpha)}\int_0^\infty(\lambda x)^{\alpha-1}e^{-\lambda x}(\lambda\;dx) \\
+    &=\frac{1}{\Gamma(\alpha)}\int_0^\infty y^{\alpha-1}e^{-y}\;dy=1=\text{rhs}
+\end{align*}
+Special case of $\text{Gamma}(\alpha, \lambda)$ occurs when $\alpha=1$,
+\[\text{Gamma}(1, \lambda)\sim\text{Exp}(\lambda).\]
+}
+
+
+\defn{$X\sim\text{Exp}(\lambda)$
+\[f(x)=\lambda e^{-\lambda x}\]
+\[F(x)=\left\{\begin{array}{lc}1-e^{-\lambda x}&x\geq0\\0&x< 0\end{array}\right.\]
+$\text{Exp}(\lambda)$ arises as a "waiting time" r.v.. Suppose that a sequence of $\text{Bernoulli}(p)$ trials is performed at times $\delta, 2\delta, 3\delta, \dots$, and let $W$ be the waiting time until the first success. Then
+\[\P(W>k\delta)=(1-p)^k.\]
+Now, fix a time $t$, by this time, approximately $k=\frac{t}{\delta}$ trials have occurred. 
+\\\\
+Let $\delta\rightarrow0^+$ and assume that $p\rightarrow0^+$ such that $\frac{p}{\delta}=\lambda$ is fixed. Then,
+\begin{align*}
+    \P(W>t)&=\P(W>\frac{t}{\delta}\cdot\delta) \\
+    &=(1-p)^{t/\delta}=(1-\lambda\delta)^{t/\delta}
+\end{align*}
+\begin{align*}
+    \lim_{\delta\rightarrow0}(1-\lambda\delta)^{t/\delta}&=L \\
+    \lim_{\delta\rightarrow0}\frac{t}{\delta}\ln(1-\lambda\delta)&=\ln{L} \\
+    \xrightarrow{L' H} t\lim_{\delta\rightarrow0}\frac{\frac{-\lambda}{1-\lambda\delta}}{1}&=\ln{L} \\
+    \implies -\lambda t&=\ln{L} \\
+    \implies L&=e^{-\lambda t}
+\end{align*}
+\[\implies F(x)=1-\P(W>t)=1-e^{-\lambda x}\]
+Therefore, $W$ is approximate to $\text{Exp}(\lambda)$.
+}
+
+Increasing (decreasing) sequence $\{A_n\}_{n:1,2,\dots}$ of events in $\F$, then $\P(\lim_{n\rightarrow\infty}A_n)=\lim_{n\rightarrow\rightarrow}\P(A_n)$. (Read/work through Section 1.7)
+
+
+\end{document}

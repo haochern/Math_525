@@ -1,0 +1,153 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\nationals}{\mathbb{N}}
+\newcommand{\N}{\nationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 15}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{October 7, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Covariance}
+
+\recap{
+    \[\Var\left(\sum^n_{i=1}X_i\right)=\sum^n_{i=1}\Var(X_i)+2\sum_{i\leq j\leq n}\Cov(X_i,X_j) \]
+    If the $X_i$'s are independent, then
+    \[\Var\left(\sum^n_{i=1}X_i\right)=\sum^n_{i=1}\Var(X_i)\]
+}
+
+\eg{
+    In Section 2.6, we will show that if $Y\sim\text{Gamma}(n,\lambda)$, $n\in\N$, then $Y\sim X_1+X_2+\dots+X_n$ in which $X_i\sim\text{Exp}(\lambda)$ and the $X_i$s are independent.
+    \begin{align*}
+        \Var Y&=\Var(X_1+\dots+X_n) \\
+        &=\sum^n_{i=1} \Var X_i \\
+        &=\sum^n_{i=1}\frac{1}{\lambda^2}=\frac{n}{\lambda^2}
+    \end{align*}
+}
+
+\eg{
+    Suppose $X\sim\text{Bern}(p)$
+    \[X=\left\{\begin{array}{ll}1&\text{w.p.}\;\;p\\0&\text{w.p.}\;\;1-p\end{array}\right.\]
+    \[\E(X^k)=1^k\cdot p+0^k(1-p)=p, \qquad k>0\]
+    \[\implies \Var X=\E(X^2)-(\E X)^2=p-p^2=p(1-p)\]
+    Aside: max when $p=\frac{1}{2}$
+}
+
+\defn{
+    If $Y\sim\text{Bin}(n,p)$, $n\in\N$
+    \\\\
+    The number of successes in $n$ independent trials in which the probability of success is $p$ for any trial.
+    \\\\
+    Let $X_i=$ outcome of the $i^{th}$ trial so that
+    \[X_i=\left\{\begin{array}{lll}1&\text{if success,}\;&\text{w.p.}\;\;p\\0&\text{if failure,}\;&\text{w.p.}\;\;1-p\end{array}\right.\]
+    \[Y=X_1+\dots+X_n,\]
+    where $X_i$ is independent and identically distributed(IID) $\text{Bern}(p)$.
+    \[\E Y=\sum^n_{i=1}\E X_i=\sum^n_{i=1}p=np\]
+    \[\Var Y=n\Var X_1=np(1-p)\]
+}
+
+\defn{
+    More properties of the covariance:
+    \\\\
+    Last time we showed that Covariance is symmetric and bilinear. 
+    \[\Cov(X,Y)=\Cov(Y,X)\]
+    \begin{align*}
+        &\Cov\left(\sum^n_{i=1}a_iX_i, \sum^m_{j=1}b_jY_j\right) \\
+        =&\sum^n_{i=1}\sum^m_{j=1}a_ib_j\Cov(X_i,Y_j)
+    \end{align*}
+    The same is true for dot product of two vectors $\Vec{x}$, $\Vec{y}$:
+    \[\Vec{x}\cdot\Vec{y}=\sum^n_{i=1}x_iy_i\]
+    \[\Vec{x}\cdot\Vec{y}=\Vec{y}\cdot\Vec{x}\]
+    \[|\Vec{x}\cdot\Vec{y}|^2\leq(\Vec{x}\cdot\Vec{x})(\Vec{y}\cdot\Vec{y})\]
+    \[|\Vec{x}\cdot\Vec{y}|=\|\Vec{x}\|\times\|\Vec{y}\|\times\cos\theta\]
+}
+
+\pf{
+    $|\Cov(X,Y)|\leq\sqrt{\Var X\cdot\Var Y}$
+    \begin{enumerate}
+        \item $\Var Y=0$
+        \[\implies\E[(Y-\E Y)^2]=0\]
+        because $(Y-\E Y)^2\geq 0$,
+        \begin{align*}
+            &\implies Y-\E Y=0, \qquad\text{w.p.}\;\;1 \\
+            &\implies \P(Y=a)=1\qquad\exists\;a\in\R
+        \end{align*}
+        For example, $X\sim U(0,1)$
+        \[Y=\left\{\begin{array}{llc}\frac{1}{2}&\text{if}&X<\frac{1}{2}\;\text{or}\;X>\frac{1}{2}\\-\frac{1}{2}&\text{if}&X=\frac{1}{2}\end{array}\right.\]
+        \[\therefore Y=\frac{1}{2}\qquad\text{w.p. 1}\]
+        \item $\Var Y>0$
+        \\\\
+        Define $Z=X-\frac{\Cov(X,Y)}{Var Y}\cdot Y$, $\Var Z\geq0$,
+        \begin{align*}
+            \Var Z&=\Cov(Z,Z) \\
+            &=\Cov\left(X-\frac{\Cov(X,Y)}{Var Y}\cdot Y,X-\frac{\Cov(X,Y)}{Var Y}\cdot Y\right) \\
+            &=\Cov(X,X)-2\frac{\Cov(X,Y)}{Var Y}\cdot\Cov(X,Y)+\left(\frac{\Cov(X,Y)}{Var Y}\right)^2\cdot\Cov(Y,Y) \\
+        \end{align*}
+        \[\implies 0\leq\Var X-\frac{(\Cov(X,Y))^2}{\Var Y}\]
+        \[\implies (\Cov(X,Y))^2\leq\Var X\cdot\Var Y\]
+        \[\implies \Cov(X,Y)\leq\sqrt{\Var X\cdot\Var Y}\]
+    \end{enumerate}
+}
+
+\cor{
+    \[\rho_{X,Y}=\frac{\Cov(X,Y)}{\sqrt{\Var X\cdot\Var Y}}\in[-1,1]\]
+}
+
+\end{document}

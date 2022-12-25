@@ -1,0 +1,154 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 16}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{October 10, 2022}
+
+\begin{document}
+
+\maketitle
+
+\begin{align*}
+    \Cov(X,Y)&=\E[(X-\E X)(Y=\E Y)] \\
+    &=\E(XY)-\E X\cdot \E Y
+\end{align*}
+Assume $\Var X>0$, $\Var Y>0$
+\[\rho_{X,Y}=\frac{\Cov(X,Y)}{\sqrt{\Var X\cdot\Var Y}}\]
+$\rho_{X,Y}=\pm1\iff \exists a, b\in\R(a\neq0)$ such that $\P(X=aY+b)=1$
+
+\pf{
+    \begin{enumerate}
+        \item $\rho_{X,Y}=1\implies\P(X=aY+b)=1$ where $a>0$, $\exists a, b$
+        \begin{align*}
+            1=\rho_{X,Y}&=\frac{\Cov(X,Y)}{\sqrt{\Var X\cdot\Var Y}} \\
+            1&=\frac{\E[(X-\E X)(Y-\E Y)]}{\sqrt{\Var X\cdot\Var Y}} \\
+            1&=\E\left[\frac{X-\E X}{\sqrt{\Var X}}\cdot\frac{Y-\E Y}{\sqrt{\Var Y}}\right]
+        \end{align*}
+        Define $Z=\frac{X-\E X}{\sqrt{\Var X}}$ and $V=\frac{Y-\E Y}{\sqrt{\Var Y}}$
+        \[\E Z=0=\E V\]
+        \begin{align*}
+            \Var Z&=\E(Z^2)=1 \\
+            \Var V&=\E(V^2)=1 \\
+        \end{align*}
+        \[\E(ZV)=1\]
+        Consider $\E[(Z-V)^2]\geq0$
+        \begin{align*}
+            \implies&\E[Z^2-2ZV+V^2] \\
+            =&\E(Z^2)-2\E(ZV)+\E(V^2) \\
+            =&1-2+1=0
+        \end{align*}
+        \begin{align*}
+            \E[(Z-V)^2]=0&\implies\P[(Z-V)^2=0]=1 \\
+            &\implies\P[(Z-V=0]=1 \\
+            &\implies\P[Z=V]=1
+        \end{align*}
+        (Similarly if $\Var X=\E[(X-\E X)^2]=0$, then $\P(X=\E X)=1$)
+        \begin{align*}
+            1&=\P\left(\frac{X-\E X}{\sqrt{\Var X}}=\frac{Y-\E Y}{\sqrt{\Var Y}}\right) \\
+            &=\P\left(X=\E X+\frac{\sqrt{\Var X}}{\sqrt{\Var Y}}(Y-\E Y)\right) \\
+            &=\P(X=aY+b), \qquad a=\frac{\sqrt{\Var X}}{\sqrt{\Var Y}}>0
+        \end{align*}
+        
+        \item  $\rho_{X,Y}=-1$ then $\exists a<0, b\in\R$ such that $\P(X=aY+b)=1$. \\\\
+        HW:
+        \begin{enumerate}
+            \item rewrite $\rho_{X,Y}=\E(ZV)=-1$
+            \item consider $\E[(Z+V)^2]$
+        \end{enumerate}
+    \end{enumerate}
+    If $\P(X=aY+b)=1$ for some $a\neq0,b\in\R$ then $\rho_{X,Y}=\pm1$.
+    \begin{align*}
+        \rho_{X,Y}&=\frac{\E[(X-\E X)(Y-\E Y)]}{\sqrt{\Var X\cdot\Var Y}} \\
+        &=\frac{\E[(aY+b-\E(aY+b))(Y-\E Y)]}{\sqrt{\Var(aY+b)\cdot\Var Y}} \\
+        &=\dots \\
+        &=\pm1
+    \end{align*}
+}
+
+\subsection*{Sum of two independent random variables}
+
+\defn{
+    Suppose $X$ and $Y$ are continuous, $Z=X+Y$. Then the joint pdf of $X,Y$ is
+    \[f_{X,Y}(x,y)=f_X(x)f_Y(y)\]
+    to get the pdf of $Z$, first calculate the cdf of $Z$:
+    \begin{align*}
+        F_Z(z)&=\P(Z\leq z)=\P(X+Y\leq Z) \\
+        &=\underset{x+y\leq z}{\int\int}f_{X,Y}(x,y)\;dxdy \\
+        &=\int_{-\infty}^\infty\int_{-\infty}^{z-y} f_{X,Y}(x,y)\;dxdy \\
+        &=\int_{-\infty}^\infty F_X(z-y)f_Y(y)\;dy
+    \end{align*}
+    \[f_Z(z)=\int_{-\infty}^\infty f_X(z-y)f_Y(y)\;dy\]
+    If $X,Y\geq0$ rvs, then
+     \[f_Z(z)=\int_0^z f_X(z-y)f_Y(y)\;dy\]
+}
+
+\eg{
+    $X,Y$ are independent $\text{Exp}(\lambda)$ rvs $f_X(x)=\lambda e^{-\lambda x}$, $x\geq0$
+    \begin{align*}
+        f_Z(z)&=\int^z_0\lambda e^{-\lambda(z-y)}\cdot\lambda e^{-\lambda y}\;dy,\qquad z\geq0 \\
+        &=\lambda^2e^{-\lambda z}\int^z_0 1\;dy \\
+        &=\lambda^2ze^{-\lambda z} \implies Z\sim\text{Gamma}(2,\lambda)
+    \end{align*}
+    HW: Show $X+Y\sim\text{Gamma}(\alpha+\beta,\lambda)$
+    \[\left.\begin{array}{c}
+        X\sim\text{Gamma}(\alpha,\lambda)  \\
+        Y\sim\text{Gamma}(\beta,\lambda)
+    \end{array}\right\}\text{independent rvs},\;\;\alpha,\beta>0\]
+}
+
+\end{document}

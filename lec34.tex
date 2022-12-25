@@ -1,0 +1,116 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{\mathcal{U}}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\mathcal{P}}
+\DeclareMathOperator{\Gam}{\text{Gamma}}
+\DeclareMathOperator{\Exp}{\text{Exp}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 34}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{December 7, 2022}
+
+\begin{document}
+
+\maketitle
+
+\eg{
+5.18 $X_1\sim\Exp(\mu)$, $X_2\sim\Exp(\lambda)$, independent. Let $X_{(1)}$, $X_{(2)}$ be the order stats, that is, $X_{(1)}=\min(X_1, X_2)$ and $X_{(2)}=\max(X_1, X_2)$. Calculate mean/var of $X_{(i)}$, $i=1, 2$. Start with $X_{(1)}$
+\begin{align*}
+    \P(X_{(1)}>t)&=\P(X_1>t, X_2>t) \\
+    &=\P(X_1>t)\P(X_2>t) \\
+    &=e^{-\mu t}e^{-\lambda t} \\
+    &=e^{-(\mu+\lambda)t}
+\end{align*}
+\[X_{(1)}\sim\Exp(\mu+\lambda)\]
+\[\E X_{(1)}=\frac{1}{\mu+\lambda}, \qquad \Var X_{(1)}=\frac{1}{(\mu+\lambda)^2}\]
+\[X_{(1)}^k+X_{(2)}^k=X_1^k+X_2^k\]
+\begin{align*}
+    \E X_{(2)}&=\E X_1+\E X_2-\E X_{(1)} \\
+    &=\frac{1}{\mu}+\frac{1}{\lambda}-\frac{1}{\mu-\lambda}
+\end{align*}
+\begin{align*}
+    \E(X_{(2)}^2)&=\E(X_1^2)+\E(X_2^2)-\E(X_{(1)}^2) \\
+    &=\frac{2}{\mu^2}+\frac{2}{\lambda^2}-\frac{2}{(\mu+\lambda)^2}
+\end{align*}
+\[\Var X_{(2)}=\frac{2}{\mu^2}+\frac{2}{\lambda^2}-\frac{2}{(\mu+\lambda)^2}-\left(\frac{1}{\mu}+\frac{1}{\lambda}-\frac{1}{\mu-\lambda}\right)^2\]
+}
+
+\eg{
+5.45 $\{N(t)\}\sim\mathcal{P}\Poiss(\lambda)$ independent of a non-negative r.v. $T$ with mean $\mu$ and variance $\sigma^2$
+\\\\
+(a) $\Cov(T, N(T))$
+\\\\
+\begin{align*}
+    \Cov(T, N(T) &= \E(T N(T))-\E T\cdot \E N(T) \\
+    &=\E_T(\E(T N(T)\mid T))-\mu \E_T(\E(N(T)\mid T)) \\
+    &=\E(T\E(N(T)\mid T))-\mu\E(\E(N(T)\mid T)) \\
+    &=\E(T\cdot \lambda T)-\lambda\E(\lambda T) \\
+    &=\lambda\E(T^2)-\mu\lambda\E T \\
+    &=\lambda(\sigma^2+\mu^2)-\mu\lambda\cdot\mu \\
+    &=\lambda\sigma^2
+\end{align*}
+(b) $\Var N(T)$
+\begin{align*}
+    \Var N(T) &= \E(\Var(N(T)\mid T))+\Var(\E(N(T)\mid T)) \\
+    &=\E(\lambda T)+\Var(\lambda T) \\
+    &=\lambda\E T+\lambda^2\Var T \\
+    &=\lambda\mu+\lambda^2\sigma^2
+\end{align*}
+}
+
+\end{document}

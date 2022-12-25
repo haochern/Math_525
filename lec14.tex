@@ -1,0 +1,171 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 14}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{October 5, 2022}
+
+\begin{document}
+
+\maketitle
+
+\recap{
+    $1_A:\Omega\rightarrow\R$, $A\in\F$
+    \[1_A(\omega)=\left\{\begin{array}{lc}1&\omega\in A\\0&\omega\notin A\end{array}\right.\]
+    Claim: $\E(1_A)=\P(A)$
+    \[1_A(\omega)=\left\{\begin{array}{ll}1&\text{w.p.}\;\P(A)\\0&\text{w.p.}\;1-\P(A)\end{array}\right.\]
+    $1_A\sim\text{Bernoulli}(\P(A)) \implies \E(1_A)=\P(A)$
+    \\\\
+    Aside: \[1_{A\cap B}=1_A\cdot 1_B\qquad1_{A\cup B}=1_A+1_B-1_{A\cap B}\]
+    \[\E(1_{A\cap B})=\E(1_A)+\E(1_B)-\E(1_{A\cap B})\]
+    \[\P(A\cap B)=\P(A)+\P(B)-\P(A\cap B)\]
+    If $X$ and $Y$ are independent, then $\Cov(X,Y)=0$. But if $\Cov(X,Y)=0$, then we cannot that $X$ and $Y$ are independent.
+}
+
+\eg{
+    $X\sim\text{U}(-1, 1)$, $Y=X^2$
+    \begin{align*}
+        \Cov(X,Y)&=\E(XY)-\E(X)\E(Y) \\
+        &=\E(X^3)=\int_{-1}^1x^3\;\frac{dx}{2} \\
+        &=\frac{x^4}{8}\bigg\vert^1_{-1}=0
+    \end{align*}
+    Detailed proof that $X$ and $Y$ are not independent,
+    \begin{align*}
+        F_{X,Y}(x,y)&=\P(X\leq x, Y\leq y) \\
+        &=\P(X\leq x, X^2\leq y) \\
+        &=\P(-1\leq X\leq x, -\sqrt{y}\leq X\leq \sqrt{y}) \\
+        &=\P(-\sqrt{y}\leq X\leq \min(x, \sqrt{y})) \\
+        &=\P(-\sqrt{y}< X\leq \min(x, \sqrt{y})) \\
+        &=F_X(\min(x, \sqrt{y}))-F_X(-\sqrt{y}) \\
+        &=\frac{\min(x, \sqrt{y})+\sqrt{y}}{2}
+    \end{align*}
+    which cannot be factor into $F_X(x)F_Y(y)$.
+     \[F_{X,Y}(x,y)=\left\{\begin{array}{lc}\P(-\sqrt{y}<X\leq x)&-\sqrt{y}<x\\0&-\sqrt{y}\geq x\end{array}\right.\]
+}
+
+\subsection*{Properties of the covariance}
+
+\pf{
+    1. $\Cov(X,X)=\Var X$
+    \begin{align*}
+        \Cov(X,X)&=\E[(X-\E X)(X-\E X)] \\
+        &=\E[(X-\E X)^2] \\
+        &=\Var X
+    \end{align*}
+}
+
+\pf{
+    2. $\Cov(X,Y)=\Cov(Y,X)$
+    \begin{align*}
+        \Cov(X,Y)&=\E[(X-\E X)(Y-\E Y)] \\
+        &=\E[(Y-\E Y)(X-\E X)] \\
+        &=\Cov(Y,X)
+    \end{align*}
+}
+
+\pf{
+    3. $\Cov(cX,Y)=c\Cov(X,Y)$, $c\in\R$
+    \begin{align*}
+        \Cov(cX,Y)&=\E(cX\cdot Y)-\E(cX)\E Y \\
+        &=c\E(XY)-c\E X\E Y \\
+        &=c\{\E(XY)-\E X\E Y\} \\
+        &=c\Cov(X,Y)
+    \end{align*}
+    Similarly, 
+    \begin{align*}
+        \Cov(X,cY)&=\Cov(cY,X) \\
+        &=c\Cov(Y,X) \\
+        &=c\Cov(X,Y)
+    \end{align*}
+}
+
+\pf{
+    4. $\Cov(X,Y+Z)=\Cov(X,Y)+\Cov(X,Z)$
+    \begin{align*}
+        \Cov(X,Y+Z)&=\E(X(Y+Z))-\E X\cdot\E(Y+Z) \\
+        &=\E(XY)+\E(XZ)-\E X\{\E Y+\E Z\} \\
+        &=\E(XY)-\E(X)\E(Y)+\E(XZ)-\E X\cdot\E Z \\
+        &=\Cov(X,Y)+\Cov(X,Z)
+    \end{align*}
+    Similarly, 
+    \begin{align*}
+        \Cov(X+Y,Z)&=\Cov(Z,X+Y) \\
+        &=\Cov(Z,X)+\Cov(Z,Y) \\
+        &=\Cov(X,Z)+\Cov(Y,Z)
+    \end{align*}
+}
+
+\pf{
+    By mathematical induction, properties 2-4 imply
+    \[\Cov\left(\sum^n_{i=1}a_iX_i, \sum^m_{j=1}b_jY_j\right)=\sum^n_{i=1}\sum^m_{j=1}a_ib_j\Cov(X_i,Y_j)\]
+    $\therefore$ We say that covariance is a symmetric, bi-linear operator.
+    \[\begin{bmatrix}x_1^2&x_1x_2&\cdots&x_1x_n\\x_2x_1&x_2^2&\cdots&x_2x_n\\\vdots&\vdots&\ddots&\vdots\\x_nx_1&x_nx_2&\cdots&x_n^2\end{bmatrix}\]
+    \begin{align*}
+        \Var\left(\sum^n_{i=1}X_i\right)&=\Cov\left(\sum^n_{i=1}X_i,\sum^n_{j=1}X_j\right) \\
+        &=\sum^n_{i=1}\sum^n_{j=1}\Cov(X_i,X_j) \\
+        &=\sum^n_{i=1}\Cov(X_i,X_i)+\sum^n_{i\neq j}\Cov(X_i,X_j) \\
+        &=\sum^n_{i=1}\Var X_i+2\sum_{i\leq j\leq n}\Cov(X_i,X_j) 
+    \end{align*}
+    Specialize $n=2$:
+    \[\Var(X+Y)=\Var X+\Var Y+2\Cov(X,Y)\]
+    Specialize $X_i$s are independent:
+    \[\Var(\text{sum})=\text{sum}(\Var)\]
+}
+
+
+
+\end{document}

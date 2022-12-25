@@ -1,0 +1,127 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+
+\title{Lecture 03}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{September 2, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{1.4 Conditional prob}
+
+\defn{ Let $(\Omega, \F, \P)$ to be a probability place. Let $B\in\F$ be a fixed set such that $\P(B)>0$. Define the conditional probability given $B$ by \[\P(A\mid B)=\frac{\P(A\cap B)}{\P(B)}\]for any $A\in\F$, where $\P$ is defined by $\P(\Omega)=1$ and $\P(\sqcup^\infty_{i=1}A_i)=\sum^\infty_{i=1}\P(A_i)$.
+}
+
+\hw{Show that $\P(\cdot\mid B)$ defines a probability on $(\Omega, \F)$.  ($\cdot$ means any element in $\F$)}
+
+\defn{\textbf{Law of total probability:} Let $A_1, A_2, \dots, A_n$ be a partition of $\Omega\in\F$, $A_i$ are pairwise disjoint and $\cup^n_{i=1}A_i=\Omega$. Assume $\P(A)>0$, \[A_1\cup A_2\cup\dots\cup A_n=\Omega.\] Let $B\in\F$, 
+\begin{align*}
+    \P(B)&=\P(B\cap\Omega) \\
+    &=\P(B\cap(A_1\cup A_2\cup\dots\cup A_n)) \\
+    &=\P((B\cap A_1)\cup(B\cap A_2)\cup\dots\cup(B\cap A_n)) \\
+\end{align*}
+which $B\cap A_i$ are pointwise disjoint for $\forall i$, or 
+\[(B\cap A_i)\cap(B\cap A_j)=B\cap(A_i\cap A_j)=\varnothing\]
+for $i\neq j$. Thus, 
+\begin{align*}
+    \P(B)&=\sum^n_{i=1}\P(B\cap A_i) \\
+    &=\sum^n_{i=1}\P(B\mid A_i)\P(A_i)
+\end{align*}
+}
+
+%TODO: pic3
+
+\eg{
+Bob possesses five coins, 2 of which are double-headed, 1 is double-tailed, and 2 are normal. Bob shuts his eyes, picks a coin at random, and tosses it.
+\begin{enumerate}
+    \item What is the prob that the lower face of the coin is a head? 
+    \begin{align*}
+        \P(\text{lower face}=H) &= \P(\text{lower face}=H\mid\text{2-headed})\P(\text{2-headed}) \\
+        &+ \P(\text{lower face} = H\mid\text{2-tailed})\P(\text{2-tailed}) \\
+        &+ \P(\text{lower face} = H\mid\text{normal})\P(\text{normal}) \\
+        &= 1\cdot\frac{2}{3}+0\cdot\frac{1}{5}+\frac{1}{2}\cdot\frac{2}{5} = \frac{3}{5}
+    \end{align*}
+    
+    \item Bob opens his eyes and sees that the coin that showing heads. What is the probability the lower face is a head? 
+    \begin{align*}
+        \P(\text{lower face}=H\mid\text{upper face}=H) &= \frac{\P(\text{lower face}=H, \text{upper face}=H)}{\P(\text{upper face}=H)} \\
+        &= \frac{\P(\text{both faces}=H)}{\P(\text{upper face}=H)} \\
+        &= \frac{2/5}{3/5}=\frac{2}{3}
+    \end{align*}
+    
+    \item Bob shuts his eyes again and re-tosses the same coin. What is the prob that the lower face is a head?
+    \begin{align*}
+        &\P(\text{lower face}=H\mid\text{the coin has an H}) \\ 
+        =&\P(\text{lower face}=H, \text{coin is 2-H})\P(\text{coin is 2-H}\mid\text{the coin has an H}) \\
+        +&\P(\text{lower face}=H, \text{coin is normal})\P(\text{coin is normal}\mid\text{the coin has an H}) \\
+        =&1\cdot\frac{2}{3}+\frac{1}{2}(1-\frac{2}{3}) \\
+        =&\frac{2}{3} + \frac{1}{6} \\
+        =&\frac{5}{6}
+    \end{align*}
+    
+    \item Bob open his eyes and sees the coin is showing heads. What is the prob that the lower face is a head?
+    \begin{align*}
+        \P(\text{lower face}=H\mid\text{this coin upper face}=H)&=\frac{\P(\text{this coin is 2-H})}{\P(\text{this coin lower face}=H)} \\
+        &=\frac{2/3}{5/6}=\frac{4}{5}
+    \end{align*}
+\end{enumerate}
+}
+
+\[\P(A\mid B)=\sum^n_{i=1}\P(A\mid B\cap C_i)\P(C_i\mid B)\]
+
+
+\end{document}

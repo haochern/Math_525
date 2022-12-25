@@ -1,0 +1,170 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\mathcal{P}}
+\DeclareMathOperator{\Gam}{\text{Gamma}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 27}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{November 11, 2022}
+
+\begin{document}
+
+\maketitle
+
+\recap{
+    \[S=X_1+X_2+\dots+X_N\]
+    \[M_S(t)=M_N(\ln M_X(t))\]
+    If $S\sim\text{Compound Poisson}(\lambda)$, then $M_S(t)=e^{\lambda(M_X(t)-1)}$.
+    \\\\
+    Recall Composition Theorem, $N_j\sim\Poiss(\lambda_j)$, where $j=1,\dots,m$, all independent,
+    \[\implies\sum^m_{j=1}N_j\sim\Poiss\left(\sum^m_{j=1}\lambda_j\right)\]
+}
+
+\defn{
+    General Composition Theorem:
+    \\\\
+    Suppose $S_j\sim\text{Compound Poisson}(\lambda_j)$ (all independent) with claim size cdf $F_j$. Then, 
+    \[S=\sum^m_{i=1}S_i\]
+    is $\text{Compound Poisson}(\sum^m_{j=1}\lambda_j)$ with claim size cdf
+    \[\sum^m_{j=1}\left(\frac{\lambda_j}{\sum^m_{i=1}\lambda_i}\right)F_j=\frac{\sum^m_{j=1}\lambda_jF_j}{\sum^m_{j=1}\lambda_j}\]
+    \begin{align*}
+        M_S(t)&=\prod^m_{j=1}M_{S_j}(t) \\
+        &=\prod^m_{j=1}e^{\lambda_j(M_j(t)-1)} \\
+        &=e^{\sum^m_{j=1}(\lambda_j(M_j(t)-1))} \\
+        &=e^{(\sum^m_{j=1}\lambda_j)\left(\frac{\sum^m_{j=1}\lambda_jM_j(t)}{\sum^m_{j=1}\lambda_j}-1\right)}
+    \end{align*}
+    (write $M_j$ as the mgf corresponding to $F_j$)
+    \\\\
+    $\implies S\sim C\Poiss\left(\sum^m_{j=1}\lambda_j\right)$ with $X$'s cdf.
+    \[F=\frac{\sum^m_{j=1}\lambda_jM_j(t)}{\sum^m_{j=1}\lambda_j}\]
+    Aside: Suppose $X$ has cdf. Then, 
+    \begin{align*}
+        M_X(t)&=\E(e^{Xt}) \\
+        &=\int^\infty_{-\infty}e^{xt}\;dF(x) \\
+        &=\int^\infty_{-\infty}e^{xt}\frac{\sum^m_{j=1}\lambda_j\;dF_j(x)}{\sum^m_{j=1}\lambda_j} \\
+        &=\frac{\sum^m_{j=1}\lambda_j\int^\infty_{-\infty}e^{xt}\;dF_j(x)}{\sum^m_{j=1}\lambda_j} \\
+        &=\frac{\sum^m_{j=1}\lambda_jM_j(t)}{\sum^m_{j=1}\lambda_j}
+    \end{align*}
+}
+
+\eg{
+    Suppose $S_A\sim C\mathcal{P}(2)$ r.v. with claim size distribution
+    \[\P(X_A=1)=0.6=1-\P(X_A=2),\]
+    and suppose $S_B\sim C\mathcal{P}(1)$ r.v. with claim size distribution
+    \[\P(X_B=1)=0.7=1-P(X_B=3).\]
+    (a) Compute the mgf of $S=S_A+S_B$.
+    \begin{align*}
+        M_{S_A}(t)&=e^{\lambda_A(M_A(t)-1)} \\
+        &=e^{2(0.6e^t+0.4e^{2t}-1)} \\
+        &=e^{1.2e^t+0.8e^{2t}-2}
+    \end{align*}
+    \[M_{S_B}(t)=e^{0.7e^t+0.3e^{3t}-1}\]
+    \begin{align*}
+        M_S(t)&=e^{1.9e^t+0.8e^{2t}+0.3e^{3t}-3} \\
+        &=e^{3\left(\frac{19}{30}e^t+\frac{4}{15}e^{2t}+\frac{1}{10}e^{3t}-1\right)}
+    \end{align*}
+    (b) State S's distribution.
+    \\\\
+    $S\sim C\Poiss(3)$ with claim size distribution $\P(X=1)=\frac{19}{30}$, $\P(X=2)=\frac{4}{15}$, $\P(X=3)=\frac{1}{10}$.
+    \begin{align*}
+        \P(X=1)&=\frac{2}{3}\cdot\P(X_A=1)+\frac{1}{3}\cdot\P(X_B=1) \\
+        &=\frac{2}{3}(0.6)+\frac{1}{3}(0.7)=\frac{19}{30}
+    \end{align*}
+    \begin{align*}
+        \P(X=2)&=\frac{2}{3}\cdot\P(X_A=2)+\frac{1}{3}\cdot\P(X_B=2) \\
+        &=\frac{2}{3}(0.4)+\frac{1}{3}\cdot0=\frac{4}{15}
+    \end{align*}
+    \begin{align*}
+        M_{S_A}(t)&=e^{\lambda_A(M_A(t)-1)} \\
+        &=e^{2(0.6e^t+0.4e^{2t}-1)} \\
+        &=e^{1.2e^t+0.8e^{2t}-2}
+    \end{align*}
+    \[M_{S_B}(t)=e^{0.7e^t+0.3e^{3t}-1}\]
+    \begin{align*}
+        M_S(t)&=e^{1.9e^t+0.8e^{2t}+0.3e^{3t}-3} \\
+        &=e^{3(\frac{19}{30}e^t+\frac{4}{15}e^{2t}+\frac{1}{10}e^{3t}-1)}
+    \end{align*}
+    (c) Write $S=1\cdot N_1+2\cdot N_2+3\cdot N_3$ and compute $\P(S=x)$, $x=0,1,2,3$
+    \begin{align*}
+        N_1&=\text{the number of size 1} \\
+        &\sim\Poiss\left(3\cdot\frac{19}{30}\right)=\Poiss\left(\frac{19}{10}\right)
+    \end{align*}
+    \begin{align*}
+        N_2&=\text{the number of size 2} \\
+        &\sim\Poiss\left(3\cdot\frac{4}{15}\right)=\Poiss\left(\frac{4}{5}\right)=\Poiss(0.8)
+    \end{align*}
+    \begin{align*}
+        N_3&=\text{the number of size 3} \\
+        &\sim\Poiss\left(3\cdot\frac{1}{10}\right)=\Poiss(0.3)
+    \end{align*}
+    \begin{tabular}{llllll}
+$x$ & $\P(2\cdot N_2=x)$ & $\P(3\cdot N_3=x)$ & $\P(2\cdot N_2+3\cdot N_3=x)$ & $\P(1\cdot N_1=x)$        & $\P(S=x)$                                         \\
+0   & $e^{-0.8}$         & $e^{-0.3}$         & $e^{-1.1}$                    & $e^{-1.9}$                & $e^{-3}$                                          \\
+1   & 0                  & 0                  & 0                             & $1.9e^{-1.9}$             & $1.9e^{-3}$                                       \\
+2   & $0.8e^{-0.8}$      & 0                  & $0.8e^{-1.1}$                 & $\frac{1.9^2}{2}e^{-1.9}$ & $\left(\frac{1.9^2}{3}+0.8\right)e^{-3}$          \\
+3   & 0                  & $0.3e^{-0.3}$      & $0.3e^{-1.1}$                 & $\frac{1.9^3}{6}e^{-1.9}$ & $\left(\frac{1.9^3}{6}+1.9(0.8)+0.3\right)e^{-3}$
+    \end{tabular}
+    \[S_A\sim C\Poiss(1),\qquad\P(X_A=1)=1\]
+    \[S_B\sim C\Poiss(3),\qquad\P(X_B=1)=\frac{1}{2}=3\P(X_B=3)\]
+    \[\P(S=3)=\P(S_A=0)\P(S_B=3)+\dots\]
+    \[\P(S_B=3)=\P(N_B=1, X_B=3)+\P(N_B=3)(\P(X_B=1))^3\]
+}
+
+
+\end{document}

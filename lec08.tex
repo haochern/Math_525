@@ -1,0 +1,110 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\natures}{\mathbb{N}}
+\newcommand{\N}{\natures}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 08}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{September 16, 2022}
+
+\begin{document}
+
+\maketitle
+
+\defn{A discrete r.v. is one for which the cdf is a right-continuous step function $F(x)$. Instead of defining the the cdf for discrete r.v., we usually define its pmf $p$,
+\begin{align*}
+    p(x)&=F(x)-F(x^-) \\
+    &=\P(X\leq x)-\P(X<x)
+\end{align*}
+Common r.v.: \\
+For $p\in(0, 1)$, $n\in\N$
+\[\begin{array}{lc}
+    \text{Bern}(p) &  \P(X=k)=\left\{\begin{array}{lc}1-p&x=0\\p&x=1\end{array}\right.\\
+    \text{Bin}(n, p) & \P(X=k)=\begin{pmatrix}n\\k\end{pmatrix}p^k(1-p)^{n-k}, \quad k=0,1,2,\dots, n \\
+    \text{Geom}(p) & \P(X=k)=(1-p)^{n-1}p, \quad n=1,2,\dots \\
+    \text{Poisson}(\lambda) & \P(X=k)=e^{-\lambda}\frac{\lambda^k}{k!}, \quad k=0,1,2,\dots 
+\end{array}\]
+\[\sum^\infty_{k=0}e^{-\lambda}\cdot\frac{\lambda^k}{k!}=e^{-\lambda}\sum^\infty_{k=0}\frac{\lambda^k}{k!}=e^{-\lambda}e^\lambda=1\]
+}
+
+\subsection*{Continuous r.v.}
+\defn{A r.v. $X$ is continuous if $\exists$ a non-negative function $f$ defined on $\R$ such that
+\[F(x)=\P(X\leq x)=\int_{-\infty}^{x}f(t)\;dt.\]
+$f$ is called the probability density function (pdf) of X. \\\\
+Fundamental theorem of calculus
+\[F'(x)=f(x).\]
+$f$ must satisfy $\int_{-\infty}^{\infty}f(t)\;dt=1$ because $\lim_{x\rightarrow\infty}F(x)=1$. \\\\
+For $a<b$,
+\[\P(a<X\leq b)=\P(X\leq b)-\P(X\leq a)\]
+because
+\[\P(X\leq a)+\P(a<X\leq b)=\P(X\leq b).\]
+\begin{align*}
+    \P(a<X\leq b)&=F(b)-F(a) \\
+    &=\int^b_{-\infty}f(x)\;dx-\int^a_{-\infty}f(x)\;dx \\
+    &=\int^b_a f(x)\;dx
+\end{align*}
+}
+
+\defn{ Uniform: $X\sim U(a, b)$ for $a<b$,
+\[f(x)=\left\{\begin{array}{lc}\frac{1}{b-a}&a<x<b\\0&\text{else}\end{array}\right.\]
+}
+
+\defn{$X\sim N(\mu, \sigma^2)$}
+\[f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}\]
+If $\mu=0$, $\sigma^2=1$, then we have the standard normal $X\in\R$ r.v..
+
+\end{document}

@@ -1,0 +1,124 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Geom}{Geom}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 23}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{November 2, 2022}
+
+\begin{document}
+
+\maketitle
+
+\eg{
+    Ex3.12: A miner is trapped in a mine containing 3 doors. Door 1 leads to safety in 2 hours. Door 2 leads back to the three doors in 3 hours. Door 3 leads back to the three doors in 5 hours. Assuming all three are equally likely to be chosen at all times, what is the expected length of time until the miner reaches safety?
+    \\\\
+    Solution: $X$ is the time until reaches safety, $Y$ is the door chosen initially.
+    \begin{align*}
+        \E X&=\E(\E(X\mid Y)) \\
+        &=\E(X\mid Y=1)\P(Y=1)+\E(X\mid Y=2)\P(Y=2)+\E(X\mid Y=3)\P(Y=3) \\
+        &=\frac{1}{3}(2+(3+\E X)+(5+\E X)) \\
+        &=\frac{10}{3}+\frac{2}{3}\E X
+    \end{align*}
+    \[\implies\frac{1}{3}\E X=\frac{10}{3}\implies\E X=10\]
+}
+
+\eg{
+    Ex3.15: Generalization of $\Geom(p)$ Independent trials, each of which is a success with probability $p$, are performed until there a $k$ consecutive successes. What is the expected number of trials?
+    \\\\
+    Solution: $N_k$ is the number of required trials for $k$ consecutive successes. $M_k=\E N_k$ \\
+    Compute $M_k$ by conditioning on $N_{k-1}$.
+    \[\E(N_k\mid N_{k-1})=\E_Y(\E(N_k\mid N_{k-1}, Y))\]
+    $Y=1$ if next trial is a success; 0, otherwise.
+    \begin{align*}
+        \E(N_k\mid N_{k-1})&=\E(N_k\mid N_{k-1}, Y=1)\P(Y=1)+\E(N_k\mid N_{k-1}, Y=0)\P(Y=0) \\
+        &=(N_{k-1}+1)p+(N_{k-1}+1+\E N_k)(1-p) \\
+        &=N_{k-1}+1+(1-p)\E N_k
+    \end{align*}
+    \[\overset{\E_{N_{k-1}}}{\implies}M_k=M_{k-1}+1+(1-p)M_k\]
+    \[pM_k=M_{k-1}+1\]
+    \[M_k=\frac{1}{p}+\frac{1}{p}M_{k-1}\]
+    \[k=1\implies M_{k-1}=0\implies M_1=\frac{1}{p}\]
+    \[M_2=\frac{1}{p}+\frac{1}{p}\cdot\frac{1}{p}=\frac{1}{p}+\frac{1}{p^2}\]
+    \[M_3=\frac{1}{p}+\frac{1}{p}\left(\frac{1}{p}+\frac{1}{p^2}\right)=\sum^3_{i=1}\frac{1}{p^i}\]
+    \begin{align*}
+        M_k=\sum^k_{i=1}\frac{1}{p^i}&=\frac{\frac{1}{p}-\frac{1}{p^{k+1}}}{1-\frac{1}{p}}\cdot\frac{p}{p} \\
+        &=\frac{1-\frac{1}{p^k}}{p-1}=\frac{\frac{1}{p^k}-1}{1-p}
+    \end{align*}
+}
+
+\eg{
+    \[f_{X,Y}(x,y)=\frac{1}{2\pi\sigma_X\sigma_Y\sqrt{1-\rho^2}}\cdot\exp{\left(-\frac{1}{2(1-p^2)}\left\{\left(\frac{x-\mu_X}{\sigma_X}\right)^2-2\rho\left(\frac{x-\mu_X}{\sigma_X}\right)\left(\frac{y-\mu_Y}{\sigma_Y}\right)+\left(\frac{y-\mu_Y}{\sigma_Y}\right)^2\right\}\right)}\]
+    (a) Compute $f_{X\mid Y}(x\mid y)$ and identify this pdf.
+    \[f_{X\mid Y}(x\mid y)=\frac{f_{X,Y}(x,y)}{f_Y(y)}\]
+    with $Y\sim N(\mu_Y, \sigma^2_Y)$.
+    \[\implies X\mid(Y=y)\sim N\left(\mu_Y+\frac{\rho\sigma_X}{\sigma_Y}(y-\mu_y),\sigma^2_X(1-p^2)\right)\]
+    vs $X\sim N(\mu_X, \sigma_X^2)$
+    \\\\
+    (b) Compute $f_{X\mid X+Y}(x\mid z)$ and identify this pdf.\\
+    (i) Compute $Z=X+Y$'s pdf.
+    \[\overset{\text{conv}}{\implies}X+Y\sim N(\mu_X+\mu_Y, \sigma_X^2+2\rho\sigma_X\sigma_Y+\sigma_Y^2)\]
+    (ii) $X$ and $X+Y$ are bivariate normal with correlation coefficient $\frac{\sigma_X+\rho\sigma_Y}{\sqrt{\sigma_X^2+2\rho\sigma_X\sigma_Y+\sigma_Y^2}}$ \\
+    use (a) to get
+    \[X\mid(X+Y=Z)\sim N\left(\mu_X+\frac{\sigma_X(\sigma_X+\rho\sigma_Y)}{\sigma_X^2+2\rho\sigma_X\sigma_Y+\sigma_Y^2}(z-(\mu_X+\mu_Y)), \sigma_X^2\sigma_Y^2\frac{1-\rho^2}{\sigma_X^2+2\rho\sigma_X\sigma_Y+\sigma_Y^2}\right)\]
+    
+    %TODO
+}
+
+\end{document}

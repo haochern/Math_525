@@ -1,0 +1,180 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 11}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{September 28, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Expectations}
+\recap{\[\E X=\int^\infty_{-\infty} x\;dF(x)\]
+}
+
+\eg{$X\sim U(a, b)$
+\[\E X=\int^b_a xf(x)\;dx=\frac{b+a}{2}\]
+}
+
+\eg{$X\sim \text{Gamma}(\alpha, \lambda)$
+\begin{align*}
+    \E X &=\int^\infty_0 xf(x)\;dx \\
+    &=\int^\infty_0 x\cdot\frac{x^{\alpha-1}e^{-\lambda x}}{\Gamma(\alpha)}\lambda^\alpha\;dx \\
+    &=\frac{\lambda^\alpha}{\Gamma(\alpha)}\int^\infty_0 x^{(\alpha+1)-1}e^{-\lambda x}\;dx \\
+    &=\frac{\lambda^\alpha}{\Gamma(\alpha)}\cdot\frac{\Gamma(\alpha+1)}{\lambda^{\alpha+1}} \int^\infty_0 \frac{\lambda^{\alpha+1}x^{(\alpha+1)-1}e^{-\lambda x}}{\Gamma(\alpha+1)}\;dx
+\end{align*}
+where we have
+\[\int^\infty_0 \frac{\lambda^{\alpha+1}x^{(\alpha+1)-1}e^{-\lambda x}}{\Gamma(\alpha+1)}\;dx=1\]
+Thus, 
+\[\E X=\frac{\Gamma(\alpha+1)}{\Gamma(\alpha)}\frac{1}{\lambda}=\frac{\alpha}{\lambda}\]
+}
+
+\eg{Special case of the $\text{Gamma}(\alpha, \lambda)$ with $\alpha=1$ is $\text{Exp}(\lambda)$
+Another way to compute $\E$. Let $S(x)=1-F(x)=\P(X>x)$, or survival function of $X$.
+\begin{align*}
+    \E X&=\int_0^\infty(1-F(x))\;dx \\
+    &=\int_0^\infty S(x)\;dx \\
+    &=\int_0^\infty e^{-\lambda x}\;dx \\
+    &=-\frac{1}{\lambda}e^{-\lambda x}\bigg\vert^\infty_0=\frac{1}{\lambda}
+\end{align*}
+Therefore, $\E X=\frac{1}{\lambda}$.
+}
+
+\eg{$X\sim \text{Pareto}(\alpha, \theta)$
+\[S(x)=\left\{\begin{array}{lc}1&x<0\\\left(\frac{\theta}{\theta+x}\right)^\alpha&x\geq0\end{array}\right.\]
+\[f(x)=F'(x)=-S'(x)\]
+\begin{align*}
+    \E X&=\int^\infty_0 \left(\frac{\theta}{\theta+x}\right)^\alpha\;dx \\
+    &=\theta^\alpha\frac{(\theta+x)^{-\alpha+1}}{-\alpha+1}\bigg\vert^\infty_{x=0}
+\end{align*}
+\[\E X=\left\{\begin{array}{lc}\infty&\alpha\leq1\\\frac{\theta}{\alpha-1}&\alpha>1\end{array}\right.\]
+}
+
+\eg{$X\sim N(\mu, \sigma^2)$
+\[f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}\]
+$f(x)$ symmetric with respect to $x=\mu$ $\implies$ $\E X=\mu$.
+\[\E X=\int^\infty_{-\infty} x\cdot\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}\;dx\]
+Let $z=\frac{x-\mu}{\sigma}$, then $dz=\frac{dx}{\sigma}$,
+\begin{align*}
+    \E X&=\int^\infty_{-\infty}(\sigma z+\mu)\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}z^2}\;dz \\
+    &=\frac{\sigma}{\sqrt{2\pi}}\int^\infty_{-\infty}ze^{-\frac{1}{2}z^2}\;dz+\mu\int^\infty_{-\infty}\frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}z^2}\;dz \\
+    &=\left(-e^{-\frac{1}{2}z^2}\right)\bigg\vert^\infty_{z=-\infty}+\mu \\
+    &=\mu
+\end{align*}
+}
+
+\defn{Expectation of a function g of X
+\begin{align*}
+    \E(g(X))&=\int^\infty_{-\infty} g(x)\;dF(x) \\
+    &=\lim_{\|\pi\|\rightarrow0}\sum^\infty_{i=-\infty}g(x_i^*)(F(x_i)-F(x_{i-1}))
+\end{align*}
+where $x_{-\infty}=-\infty$ and $x_\infty=\infty$.
+\\\\
+If $X$ is discrete with pmf $p$,
+\[\E(g(X))=\sum_{x_k}g(x_k)p(x_k)\]
+If $X$ is continuous with pdf $f$,
+\[\E(g(X))=\int^\infty_{-\infty} g(x)f(x)\;dx\]
+$\E$ is a linear operator
+\[g(x)=ax+b,\qquad a, b\in\R\]
+\begin{align*}
+    \E(aX+b)&=\int_{-\infty}^\infty(ax+b)\;F(x) \\
+    &=a\int_{-\infty}^\infty x\;dF(x)+b\int_{-\infty}^\infty1\;dF(x) \\
+    &=a\E X+b
+\end{align*}
+}
+
+\defn{Variance of $X$: $g(x)=(x-\E X)^2$
+\begin{align*}
+    \Var X&=\E[(X-\E X)^2] \\
+    &=\E[X^2-2\E X\cdot X+(\E X)^2] \\
+    &=\E(X^2)-2\E X\cdot\E X+(\E X)^2 \\
+    &=\E(X^2)-(\E X)^2
+\end{align*}
+Typically, we call $\E(X^k)$ as $k^{\underline{th}}$ moment, so $\E(X^2)$ is second moment. \\
+Similarly, we call $\E((X-\E X)^k)$ as $k^{\underline{th}}$ central moment, so $\Var X$ is $2^{nd}$ central moment. 
+\\\\
+For $a, b\in\R$, 
+\begin{align*}
+    &\Var(aX+b) \\
+    =&\E((aX+b-\E(aX+b))^2) \\
+    =&\E((aX+b-(a\E X+b))^2) \\
+    =&\E((aX-a\E X)^2) \\
+    =&\E(a^2(X-\E X)^2) \\
+    =&a^2\E((X-\E X^2) \\
+    =&a^2\Var X
+\end{align*}
+}
+
+\eg{$X\sim N(\mu, \sigma^2)$
+Given that $\E X=\mu$,
+\[\Var(X)=\int^\infty_{-\infty} (x-\mu)^2 \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}\;dx\]
+Let $z=\frac{x-\mu}{\sigma}$, then $dz=\frac{dx}{\sigma}$,
+\begin{align*}
+    \Var X&=\int^\infty_{-\infty}\sigma^2 z^2\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}z^2}\;dz \\
+    &= \frac{\sigma^2}{\sqrt{2\pi}}\int^\infty_{-\infty}z\left(ze^{-\frac{1}{2}z^2}\;dz\right)
+\end{align*}
+Consider that $u=z$ and $dt=ze^{-\frac{1}{2}z^2}\;dz$,
+\begin{align*}
+    \Var X&=\sigma^2\frac{1}{\sqrt{2\pi}}\left[-ze^{-\frac{1}{2}z^2}\bigg\vert^\infty_{-\infty}+\int_{-\infty}^\infty e^{-\frac{1}{2}z^2}\;dz\right] \\
+    &=\sigma^2\frac{1}{\sqrt{2\pi}}\int_{-\infty}^\infty e^{-\frac{1}{2}z^2}\;dz=\sigma^2
+\end{align*}
+}
+
+
+
+\end{document}

@@ -1,0 +1,150 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 12}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{September 30, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Jointly distributed r.v.s}
+
+\defn{
+    $(X, Y)$ is a bivariate real-valued r.v. on $(\Omega, \F, \P)$ if
+    \[(X, Y):\Omega\rightarrow\R^2, \qquad \omega\rightarrow(X(\omega), Y(\omega))\]
+    such that $\{\omega\in\Omega:X(\omega)\leq x, Y(\omega)\leq y\}$ is in $\F$, for all $x, y\in\R$. 
+    \\\\
+    Joint cdf of $X$ and $Y$, or cdf of $(X, Y)$
+    \[F_{X,Y}(x, y)=\P(X\leq x, Y\leq y)\]
+    From $F_{X,Y}$ we can retrieve the cdfs of $X$ and $Y$.
+    \\\\
+    Marginal cdf of $X$:
+    \[F_X(x)=\P(X\leq x)=\P(X\leq x, Y<\infty)=\lim_{y\rightarrow\infty}F_{X,Y}(x, y)\]
+    Similarly, the marginal cdf of $Y$:
+    \[F_Y(y)=\lim_{x\rightarrow\infty}F_{X,Y}(x, y)\]
+    \begin{enumerate}
+        \item 
+            If (X, Y) is discrete then its pmf
+            \begin{align*}
+                p(x, y)&=\P(X=x, Y=y) \\
+                &=\P(X\leq x, Y\leq y)-\P(X<x, Y\leq y)-\P(X\leq x, Y<y)+\P(X<x, Y<y) \\
+                &=F_{X,Y}(x, y) - F_{X,Y}(x^-, y) - F_{X,Y}(x, y^-) + F_{X,Y}(x^-, y^-)
+            \end{align*}
+            In the discrete case, to get the marginal pmf of $X$
+            \[p_X(x)=\P(X=x)=\sum_y\P(X=x, Y=y)=\sum_y p_{X,Y}(x, y)\]
+        \item 
+            If (X, Y) is continuous, then $\exists\text{pdf}\;f_{X,Y}(x, y)$ such that
+            \[F_{X,Y}(x, y)=\int^y_{-\infty} \int^x_{-\infty}f_{X,Y}(u, v)\;dudv\]
+            If $f$ is continuous (where it is non-zero), then
+            \begin{align*}
+                \frac{\partial F_{X,Y}}{\partial x}&=\int^y_{-\infty}f_{X,Y}(x, v)dv \\
+                \frac{\partial^2F_{X,Y}}{\partial y\partial x}&=f_{X,Y}(x, y)
+            \end{align*}
+            In the continuous case, to get the marginal pdf of $X$, say,
+            \[F_X(x)=F_{X,Y}(x, \infty)=\int^\infty_{-\infty}\int^x_{-\infty}f_{X,Y}(u, v)\;dudv\]
+            Differentiate with respect to $x$
+            \[f_X(x)=\int^\infty_{-\infty}f_{X,Y}(x,y)\;dy\]
+            which we call $f_X(x)$ as the marginal pdf of $X$.
+    \end{enumerate}
+}
+
+\eg{
+    Bivariate normal has pdf
+    \[f_{X,Y}(x, y)=\frac{1}{2\pi\sigma_1\sigma_2\sqrt{1-\rho^2}}\exp{\left\{-\frac{1}{2(1-\rho^2)}\left[\left(\frac{x-\mu_1}{\sigma_1}\right)^2-2\rho\left(\frac{x-\mu_1}{\sigma_1}\right)\left(\frac{y-\mu_2}{\sigma_2}\right)+\left(\frac{y-\mu_2}{\sigma_2}\right)^2\right]\right\}}\]
+    for some $\rho\in(-1, 1)$, $x, y\in\R$.
+    \\\\
+    Let $z=\frac{y-\mu_2}{\sigma_2}$ and $dz=\frac{dy}{\sigma_2}$,
+    \begin{align*}
+        f_X(x)&=\int^\infty_{-\infty}f_{X,Y}(x,y)\;dy \\
+        &=\frac{e^{-\frac{1}{2(1-\rho^2)}\left(\frac{x-\mu_1}{\sigma_1}\right)^2}}{2\pi\sigma_1\sqrt{1-\rho^2}}\int_{-\infty}^\infty e^{-\frac{1}{2(1-\rho^2)} \left[-2\rho\left(\frac{x-\mu_1}{\sigma_1}\right)z+z^2\right]}\;dz \\
+        &=\frac{e^{-\frac{1}{2(1-\rho^2)}\left(\frac{x-\mu_1}{\sigma_1}\right)^2}}{2\pi\sigma_1\sqrt{1-\rho^2}}\cdot e^{\frac{\rho^2}{2(1-\rho^2)}\left(\frac{x-\mu_1}{\sigma_1}\right)^2} \int^\infty_{-\infty} e^{-\frac{1}{2(1-\rho^2)}\left[\rho^2\left(\frac{x-\mu_1}{\sigma_1}\right)^2-2\rho\left(\frac{x-\mu_1}{\sigma_1}\right)z+z^2\right]}\;dz \\
+        &=\frac{e^{-\frac{1-\rho^2}{2(1-\rho^2)}\left(\frac{x-\mu_1}{\sigma_1}\right)^2}}{\sqrt{2\pi\sigma_1^2}} \int^\infty_{-\infty} \frac{1}{\sqrt{2\pi(1-\rho^2)}}\cdot e^{-\frac{1}{2(1-\rho^2)}\left[z-\rho\left(\frac{x-\mu_1}{\sigma_1}\right)\right]^2}\;dz
+    \end{align*}
+    Integrand is pdf of $\text{N}(\rho\frac{x-\mu_1}{\sigma_1}, 1-\rho^2)$, Therefore, 
+    \[f_X(x)=\frac{1}{\sqrt{2\pi\sigma^2_1}}e^{\-\frac{1}{2}\left(\frac{x-\mu_1}{\sigma_1}\right)^2}, \quad x\in\R\qquad\implies\qquad X\sim\text{N}(\mu_1, \sigma_1^2)\]
+    Similarly, $Y\sim\text{N}(\mu_2, \sigma_2^2)$.
+}
+
+\subsection*{Independent r.v.s}
+\defn{
+    $X$ and $Y$ are independent if 
+    \[F_{X,Y}(x, y)=F_X(x)F_Y(y)\]
+    for all $x, y\in\R$.
+    \\\\
+    Or equivalently, if $(X, Y)$ is discrete,
+    \[p_{X,Y}(x, y)=p_X(x)p_Y(y)\]
+    or if (X,Y) is continuous,
+    \[f_{X,Y}(x,y)=f_X(x)f_Y(y)\]
+}
+
+\eg{
+    Bivariate normal $X$ and $Y$ are independent if and only if $\rho=0$.
+    \begin{align*}
+        f_{X,Y}(x, y)&=\frac{1}{2\pi\sigma_1\sigma_2\sqrt{1-\rho^2}}\exp{\left\{-\frac{1}{2(1-\rho^2)}\left[\left(\frac{x-\mu_1}{\sigma_1}\right)^2-2\rho\left(\frac{x-\mu_1}{\sigma_1}\right)\left(\frac{y-\mu_2}{\sigma_2}\right)+\left(\frac{y-\mu_2}{\sigma_2}\right)^2\right]\right\}} \\
+        &=\frac{1}{\sqrt{2\pi\sigma_1}\sqrt{2\pi\sigma_2}}\exp{\left\{-\frac{1}{2}\left[\left(\frac{x-\mu_1}{\sigma_1}\right)^2+\left(\frac{y-\mu_2}{\sigma_2}\right)^2\right]\right\}} \\
+        &=f_X(x)\cdot f_Y(y)
+    \end{align*}
+}
+
+\hw{
+    Prove that, if $(X, Y)$ is continuous, then $F_{X,Y}(x, y)=F_X(x)F_Y(y)\iff f_{X,Y}(x, y)=f_X(x)f_Y(y)$.
+}
+
+\end{document}

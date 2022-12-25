@@ -1,0 +1,134 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{\mathcal{U}}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\mathcal{P}}
+\DeclareMathOperator{\Gam}{\text{Gamma}}
+\DeclareMathOperator{\Exp}{\text{Exp}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 33}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{December 5, 2022}
+
+\begin{document}
+
+\maketitle
+
+\eg{
+(b) Expected waiting time $\E W$
+\begin{align*}
+    \E W&=\E(\E(W\mid S_1)) \\
+    &=0\cdot\P(S_1>T)+\E(S_1+\E W)\mid S_1\leq T)\cdot\P(S_1\leq T) \\
+    &=\E(S_1\mid S_1\leq T)\cdot\P(S_1\leq T)+\E W\cdot \P(S_1\leq T) \\
+    &=\int^T_0 \frac{s\cdot\lambda e^{-\lambda s}\;ds}{1-e^{-\lambda T}}\cdot(1-e^{-\lambda T})+\E W(1-e^{-\lambda T})
+\end{align*}
+\begin{align*}
+    \E W\cdot e^{-\lambda T}&=\int^T_0 s\cdot\lambda e^{-\lambda s}\;ds \\
+    &=-Te^{-\lambda T}+\frac{1-e^-\lambda T}{\lambda}
+\end{align*}
+\[\E W=-T+\frac{e^{\lambda T}-1}{\lambda}\]
+}
+
+\eg{
+Compute the conditional probability $\P(N(s)=m\mid N(t)=n)$ for $0\leq m \leq n$, $0\leq s\leq t$.
+\begin{align*}
+    \P(N(s)=m\mid N(t)=n)&=\frac{\P(N(s)=m, N(t)=n)}{\P(N(t)=n)} \\
+    &=\frac{\P(N(s)=m, N(t)-N(s)=n-m)}{\P(N(t)=n)}
+\end{align*}
+where $N(t)-N(s)\sim N(t-s)\sim\Poiss(\lambda(t-s))$. Then
+\begin{align*}
+    \P(N(s)=m\mid N(t)=n)&=\frac{e^{-\lambda s}\frac{(\lambda s)^m}{m!}\cdot e^{-\lambda(t-s)\frac{(\lambda(t-s))^{n-m}}{(n-m)!}}}{e^{\lambda t}\frac{(\lambda t)^n}{n!}}\\
+    &=\frac{s^m}{m!}\cdot\frac{(t-s)^{n-m}}{(n-m)!}\cdot \frac{n!}{t^n} \\
+    &=\frac{n!}{m!(n-m)!}\cdot\left(\frac{s}{t}\right)^m\left(1-\frac{s}{t}\right)^{n-m} \\
+    &=\begin{pmatrix} n \\ m \end{pmatrix}\left(\frac{s}{t}\right)^m\left(1-\frac{s}{t}\right)^{n-m}
+\end{align*}
+\[N(s)\mid (N(t)=n)\sim\Binom\left(n, \frac{s}{t}\right)\]
+}
+
+\eg{
+Compute the conditional probability $\P(N(t)=n\mid N(s)=m)$ for $0\leq m \leq n$, $0\leq s\leq t$.
+\begin{align*}
+    \P(N(t)=n\mid N(s)=m)&=\frac{\P(N(s)=m, N(t)=n)}{\P(N(s)=m)} \\
+    &=\frac{\P(N(s)=m, N(t)-N(s)=n-m)}{\P(N(s)=m)} \\
+    &=\P(N(t)-N(s)=n-m) \\
+    &=e^{-\lambda(t-s)}\frac{(\lambda(t-s))^{n-m}}{(n-m)!}
+\end{align*}
+where $n-m=0, 1, 2, \dots$ such that $n=m, m+1, m+2, \dots$
+\[N(t)\mid (N(s)=m)\sim m+\Poiss(\lambda(t-s))\]
+\[\implies\E(N(t)\mid N(s)=m)=m+\lambda(t-s)\]
+}
+
+\recap{
+Friday:
+\[\P(T_1\leq s\mid N(t)=1)=\frac{s}{t}\]
+}
+
+\eg{
+Compute $\E(N(s)\mid N(t)=n)$ for $0\leq m \leq n$, $0\leq s\leq t$.
+\[\E(N(s)\mid N(t)=n)=n\cdot\frac{s}{t}\]
+}
+% TODO
+\eg{
+Compute $\E(N(s)\mid N(r)=l, N(t)=n)$ for $r\leq s\leq t$, $0\leq l\leq n$.
+\begin{align*}
+    \E(N(s)\mid N(r)=l, N(t)=n)&=\E(N(s)-N(r)\mid N(t)-N(r)=n-l)+L \\
+    &=l+(n-l)\frac{s-r}{t-r}
+\end{align*}
+}
+
+
+\end{document}

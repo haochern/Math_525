@@ -1,0 +1,143 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\text{Poisson}}
+\DeclareMathOperator{\Gam}{\text{Gamma}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 26}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{November 9, 2022}
+
+\begin{document}
+
+\maketitle
+
+\defn{
+Decomposition Theorem $N\sim\Poiss(\lambda)$
+\begin{itemize}
+    \item $m$ types -- independent
+    \item Probabilities of the types $p_j$ such that $\sum^m_{j=1} p_j=1$
+    \item $N_j$ is the number of events of type $j$
+\end{itemize}
+then,
+\begin{enumerate}
+    \item $N_j$ are all independent of each other
+    \item $N=\sum^m_{j=1} N_j$
+    \item $N_j\sim\Poiss(\lambda p_j)$
+\end{enumerate}
+}
+
+\eg{
+    Applications: the number of eggs is $N\sim\Poiss(\lambda)$, each egg hatches into a chick w.p. $p$. Calculate $\E(N\mid K=k)$, in which $K$ is the number of eggs that hatch.
+    \[N=K+(N-K)\]
+    where $K\sim\Poiss(\lambda p)$ and $N-K\sim\Poiss(\lambda(1-p))$ are independent.
+    \begin{align*}
+        \implies&\E(N\mid K=k) \\
+        =&\E(K+(N-K)\mid K=k) \\
+        =&\E(K\mid K=k)+\E(N-K\mid K=k) \\
+        =&k+\E(N-K) \\
+        =&k+\lambda(1-p)
+    \end{align*}
+}
+
+\eg{
+    Aggregate insurance claims: 
+    \\\\ 
+    $N\sim\Poiss(\lambda)$ is the number of insurance claims, or claim frequency. $X_i$ is the size of the ith claim. $X_1, X_2, \dots$ are iid, independent of $N$. (Compound Poisson model)
+    \\\\
+    Additional assumption: $X$ takes values in $\{1,2,\dots,m\}$ with probabilities $p_1, p_2, \dots, p_m$.
+    \\\\
+    Define $N_j$ is the number of claims of size $j$, $j=1,2,\dots,m$.
+    \[\implies S=1\cdot N_1+2\cdot N_2+\dots+m\cdot N_m\]
+    where $N_j\sim\Poiss(\lambda p_j)$
+    \\\\
+    Specific ex: For a compound $\Poiss(6)$ distribution, individual claims have pmf \[\P(X=1)=\P(X=2)=\P(X=4)=\frac{1}{3}\]
+    Use the Decomposition Theorem to compute $\P(S=x)$ for $x=0,1,2,\dots,6$.
+    \[N_1\sim\Poiss(6\cdot\frac{1}{3}=2)\sim N_2\sim N_4\]
+    \[S=1\cdot N_1+2\cdot N_2+4\cdot N_4\]
+    \[\P(N=n)=e^{-\lambda}\frac{\lambda^n}{n!}\]
+    \begin{center}
+        \begin{tabular}{llllll}
+$x$ & $\P(2\cdot N_2=x)$ & $\P(4\cdot N_4=x)$ & $\P(2\cdot N_2+4\cdot N_4=x)$ & $\P(1\cdot N_1=x)$ & $\P(S=x)$ \\
+0 & $e^{-2}$ & $e^{-2}$ & $e^{-4}$ & $e^{-2}$ & $e^{-6}$ \\
+1 & $0$ & $0$ & $0$ & $2e^{-2}$ & $2e^{-6}$ \\
+2 & $2e^{-2}$ & $0$ & $2e^{-4}$ & $2e^{-2}$ & $4e^{-6}$ \\
+3 & $0$ & $0$ & $0$ & $\frac{4}{3}e^{-2}$ & $\frac{16}{3}e^{-6}$ \\
+4 & $\frac{2^2}{2!}e^{-2}=2e^{-2}$ & $2e^{-2}$ & $4e^{-4}$ & $\frac{2}{3}e^{-2}$ & $\frac{26}{3}e^{-6}$ \\
+5 & $0$ & $0$ & $0$ & & \\
+6 & $\frac{2^3}{3!}e^{-2}=\frac{4}{3}e^{-2}$ & $0$ & $\frac{16}{3}e^{-4}$ & & 
+        \end{tabular}
+    \end{center}
+    \begin{align*}
+        M_S(t)&=\E(e^{St}) \\
+        &=\E(\E(e^{(X_1+\dots+X_n)t}\mid N=n)) \\
+        &\overset{X_i\;\text{ind't}}{=}\E_N\left(\prod^n_{i=1}\E(e^{X_i t}), N=n\right) \\
+        &=\E_N((M_X(t))^N) \\
+        &=\E_N(e^{N\ln M_X(t)})
+    \end{align*}
+    where $M_X(t)=\E(e^{Xt})$, $M_N(t)=e^{\lambda(e^t-1)}$. Given that $X=1,2,4$ w.p. $\frac{1}{3}$ and $\lambda=6$,
+    \begin{align*}
+        M_S(t)&=e^{\lambda(M_X(t)-1)} \\
+        &=e^{6\left(\frac{1}{3}(e^t+e^{2t}+e^{4t})-1\right)} \\
+        &=e^{2(e^t-1)}\cdot e^{2(e^{2t}-1)}\cdot e^{2(e^{4t}-1)} \\
+        &=M_{N_1}\cdot M_{2\cdot N_2} \cdot M_{4\cdot N_4}
+    \end{align*}
+}
+
+
+\end{document}

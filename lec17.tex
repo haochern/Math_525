@@ -1,0 +1,177 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 17}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{October 12, 2022}
+
+\begin{document}
+
+\maketitle
+
+\eg{
+    $X\sim\text{Poisson}(\lambda)$, $Y\sim\text{Poisson}(\mu)$, $X, Y$ are independent. Show that $Z=X+Y\sim\text{Poisson}(\lambda+\mu)$.
+    \begin{align*}
+        \P(Z=z)&=\underset{x+y=z}{\sum\sum}\P(X=x)\P(Y=y) \\
+        &=\sum^z_{x=0}\P(X=x)\P(Y=z-x) \\
+        &=\sum^z_{x=0}e^{-\lambda}\frac{\lambda^x}{x!}\cdot e^{-\mu}\frac{\mu^{z-x}}{(z-x)!} \\
+        &=\frac{e^{-(\lambda+\mu)}}{z!}\sum^z_{x=0}\frac{z!}{x!(z-x)!}\cdot \lambda^x\mu^{z-x} \\
+        &=e^{-(\lambda+\mu)}\cdot \frac{(\lambda+\mu)^z}{z!}
+    \end{align*}
+    where the binomial expansion could be simplified by $\sum^z_{x=0}\frac{z!}{x!(z-x)!}\cdot \lambda^x\mu^{z-x}=(\lambda+\mu)^z$.
+    \[\therefore Z\sim\text{Poisson}(\lambda+\mu)\]
+}
+
+
+\defn{
+    \textbf{Order statistics}
+    \\
+    Suppose we have $X_1, X_2, \dots, X_n$ iid rvs. For any realization (values at $\omega\in\Omega$), we can order the outcomes
+    \[X_{(1)}<X_{(2)}<\dots<X_{(n)}\]
+}
+
+
+\eg{
+    $S_{X_{(1)}}(x)=(1-F_X(x))^n$
+    \begin{align*}
+        S_{X_{(1)}}(x)&=1-F_{X_{(1)}}(x) \\
+        &=\P(X_{(1)}>x) \\
+        &=\P(\min(X_1,X_2,\dots, X_n)>x) \\
+        &=\P(X_1>x, X_2>x, \dots, X_n>x) \\
+        &=\P(X_1>x)\P(X_2>x)\dots\P(X_n>x) \\
+        &=(1-F_X(x))^n
+    \end{align*}
+    where $X_1\sim X_2\sim\dots\sim X_n\sim X$ such that $\P(X_1>x)=\dots=\P(X_n>x)=(1-F_X(x))$.
+}
+
+\eg{
+    $F_{X_{(n)}}(x)=(F_X(x))^n$
+    \begin{align*}
+        F_{X_{(n)}}(x)&=\P(X_{(n)}\leq x) \\
+        &=\P(\max(X_1,X_2,\dots, X_n)\leq x) \\
+        &=\P(X_1\leq x, X_2\leq x, \dots, X_n\leq x) \\
+        &=\P(X_1\leq x)\P(X_2\leq x)\dots\P(X_n\leq x) \\
+        &=(F_X(x))^n
+    \end{align*}
+}
+
+\eg{
+    $F_{X_{(k)}}(x)=\sum^n_{i=k}\begin{pmatrix}n\\i\end{pmatrix}(F_X(x))^i(1-F_X(x))^{n-1}$ for $k<n$
+    \begin{align*}
+        F_{X_{(k)}}(x)&=\P(X_{(k)}\leq x) \\
+        &=\sum^n_{i=k}\P(\text{$i$ of the $X$s$\leq x$, $n-i$ of them $>x$}) \\
+        &=\sum^n_{i=k}\begin{pmatrix}n\\i\end{pmatrix}(F_X(x))^i(1-F_X(x))^{n-1}
+    \end{align*}
+}
+
+\hw{
+    2.61(iv) $N=\min$\{$n$ : $n>1$ and a record occurs at time $n$\}. Show that $\E N=\infty$.
+    \[X_1, X_2, \dots, X_{n-1}, X_n\]
+    If $X_n$ is a record, then $X_n=X_{(n)}$. If $X_n$ is the first record after time 1, then also $X_1=X_{(n-1)}$.
+    \[\P(N=n)=\P(X_n=X_{(n)}, X_1=X_{(n-1)})\]
+    for $n=2, 3, 4, \dots$.
+    \\\\
+    Aside: when $X_1$ and $X_2$ are two continuous random variables, we have
+    \[\P(X_1=X_2)=\{\text{volume under $f_{X_1}(x)f_{X_2}(x)$ and over the line $x_1=x_2$}\}=0\]
+    Method 1:
+        \begin{align*}
+            \P(N=n)&=\P(X_{(n-1)}=X_1\mid X_n=X_{(n)})\cdot\P(X_n=X_{(n)}) \\
+            &=\frac{1}{n-1}\cdot\frac{1}{n} \\
+            &=\frac{1}{n(n-1)}
+        \end{align*}
+    Method 2:
+        \[\max(X_2, \dots, X_{n-1})<X_1<X_n\]
+        \[\max(X_2, \dots, X_{n-1}) \implies \text{cdf: } (F_X(x))^{n-2} \implies \text{pdf: } (n-2)(F_X(x))^{n-3}f_X(x)\]
+        \begin{align*}
+            \P(N=n)&=\int^\infty_{-\infty}\int^z_{-\infty}\int^y_{-\infty}(n-2)(F_X(x))^{n-3}f_X(x)f_X(y)f_X(z)\;dxdydz \\
+            &=\int^\infty_{-\infty}\int^z_{-\infty}(F_X(y))^{n-2}f_X(y)f_X(z)\;dydz  \qquad u=F_X(y)\quad du=f_X(y)\;dy\\
+            &=\int^\infty_{-\infty}\frac{(F_X(z))^{n-1}}{n-1}f_X(z)\;dz \\
+            &=\frac{(F_X(z))^{n}}{n(n-1)}\bigg\vert^\infty_{z=-\infty} \\
+            &=\frac{1}{n(n-1)}
+        \end{align*}
+    Therefore, the expectation of $N$ is
+    \[\E N=\sum^\infty_{n=2}n\cdot\P(N=n)=\sum^\infty_{n=2}\frac{n}{n(n-1)}=\infty\]
+}
+
+\eg{
+    Change of variables from 2.5.4
+    \\\\
+    Lognormal:
+    \[X\sim N(\mu, \sigma^2)\implies e^X\sim\text{lognormal}(\mu, \sigma)\]
+}
+
+\eg{
+    $X\sim\text{Pareto}(\alpha, \theta)$, $S_X(x)=\left(\frac{\theta}{\theta+x}\right)^\alpha$, $x\geq0$
+    \\\\
+    Let $Y=\ln{(1+\frac{X}{\theta})}$. What is $Y$'s distribution?
+    \begin{align*}
+        S_Y(y)&=\P(Y>y) \\
+        &=\P\left(\ln\left(1+\frac{X}{\theta}\right)>y\right) \\
+        &=\P\left(1+\frac{X}{\theta}>e^y\right) \\
+        &=\P(X>\theta(e^y-1)) \\
+        &=S_X(\theta(e^y-1)) \\
+        &=\left(\frac{\theta}{\theta+\theta(e^y-1)}\right)^\alpha \\
+        &=e^{-\alpha y}\implies Y\sim\text{Exp}(\alpha)
+    \end{align*}
+}
+
+\defn{
+    Moment generating functions $M_X(t)=\E(e^{Xt})$ wherever this expectation is finite.
+}
+
+\end{document}

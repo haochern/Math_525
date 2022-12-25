@@ -1,0 +1,126 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 05}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{September 9, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Bayes' Formula}
+
+\recap{From 1.4, we defined conditional probability. If $\P(B)>0$, then
+\[\P(A\mid B)=\frac{\P(A\cap B)}{\P(B)}.\]
+\[\frac{\P(A\cap B)}{\P(A)}=\frac{\P(B\cap A)}{\P(A)}=\P(B\mid A)\]
+\[\implies\P(A\cap B)=\P(B\mid A)\P(A)\]}
+
+\defn{Bayes' formula
+\[\P(A\mid B)=\frac{\P(B\mid A)\P(A)}{\P(B)}\]}
+
+%TODO: ins queuing theory
+
+\eg{A random number $N$ of dice are thrown. $A_i$ is the event that $N=i$ and $\P(A_i)=\frac{1}{2^i}$, $i=1, 2, 3, \dots$. Then sum of the dice is $S$. Assume that each die is fair with $\P(\text{die}=j)=\frac{1}{6}$, $j=1, 2, \dots, 6$, independent of $A_i$.
+\begin{enumerate}
+    \item Calculate $\P(N=2\mid S=4)$
+        \begin{align*}
+            &=\frac{\P(S=4\mid N=2)\P(N=2)}{\P(S=4)} \\
+            &=\frac{\P(S=4\mid N=2)\P(N=2)}{\sum_{i=1}^\infty\P(S=4\mid N=i)\P(N=i)} \\
+            &=\frac{\frac{3}{36}\cdot\frac{1}{2^2}}{(\frac{1}{6}\cdot\frac{1}{2}+\frac{3}{36}\cdot\frac{1}{2^2}+\frac{3}{6^3}\cdot\frac{1}{2^3}+\frac{1}{6^4}\cdot\frac{1}{2^4})} \\
+            &=\frac{432}{2197}
+        \end{align*}
+    \item Calculate $\P(S=4\mid N=\text{even})$
+        \begin{align*}
+            &=\frac{\P(S=4\;\text{and}\;N=\text{even})}{\P(N=\text{even})} \\
+            &=\frac{\P(S=4, N=2)+\P(S=4, N=4)}{\P(N=\text{even})} \\
+            &=\frac{\frac{3}{36}\cdot\frac{1}{2^4}+\frac{1}{6^4}\cdot\frac{1}{2^4}}{\frac{1}{2^2}+\frac{1}{2^4}+\dots} \\
+            &=\frac{433}{6912}
+        \end{align*}
+    \item Calculate $\P(N=2\mid S=4\tand\text{first die}=1)$
+    \begin{align*}
+        &=\frac{\P(N=2\tand S=4\tand X_1=1)}{\P(S=4\tand X_1=1)} \\
+        &=\frac{\P(X_1=1\tand X_2=3\tand N=2)}{\P(S=4\tand X_1=1)} \\
+        &=\frac{\P(X_1=1\tand X_2=3\mid N=2)\P(N=2)}{\P(S=4, X_1=1)} \\
+        &=\frac{\P(X_1=1, X_2=3)\P(N=2)}{\P(S=4, X_1=1)} \\
+        &=\frac{\P(X_1=1)\P(X_2=3)\P(N=2)}{\P(S=4, X_1=1)} \\
+        &=\frac{\P(X_1=1)\P(X_2=3)\P(N=2)}{\sum_{i=1}^\infty\P(S=4, X_1=1\mid N=i)\P(N=i)} \\
+        &=\frac{\frac{1}{6}\cdot\frac{1}{6}\cdot\frac{1}{2^2}}{(\frac{1}{6^2}\cdot\frac{1}{2^2}+\frac{2}{6^3}\cdot\frac{1}{2^3}+\frac{1}{6^4}\cdot\frac{1}{2^4})} \\
+        &=\frac{144}{181}
+    \end{align*}
+    \item Calculate $\P_r:=\P(\text{largest \# show by any die is } r)$
+        \[P_r=\P(\text{all die}\leq r)-\P(\text{all die}\leq r-1)\]
+        \begin{align*}
+            r=1:\;\;&\P_1=\P(\text{all die}=1) \\
+            &=\sum^\infty_{i=1}\P(X_1=1=\dots=X_i\mid N=i)\P(N=i) \\
+            &=\sum^\infty_{i=1}\frac{1}{6^i}\cdot\frac{1}{2^i}
+            =\sum^\infty_{i=1}\frac{1}{12^i} 
+            =\frac{\frac{1}{12}}{1-\frac{1}{12}} 
+            =\frac{1}{11} \\
+            r\geq2:\;\;&\P(\text{all die}\leq r)=\sum^\infty_{i=1}\P(\text{all die}\leq r\mid N=i)\P(N=i) \\ %TODO
+            &=\sum^\infty_{i=1}(\frac{r}{6})^i\cdot\frac{1}{2^i}=\frac{r}{12-r} \\
+            &\implies\P_2=\frac{2}{12-2}-\frac{1}{11}=\frac{6}{55} \\
+            &\;\;\;\;\vdots \\
+            &\implies\P_6=\frac{2}{7}
+        \end{align*}
+        
+\end{enumerate}
+}
+
+
+
+\end{document}

@@ -1,0 +1,128 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+
+\title{Lecture 04}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{September 7, 2022}
+
+\begin{document}
+
+\maketitle
+
+\defn{\textbf{The Monty Hall Problem}
+\begin{align*}
+    \P(\text{win car if switch})&=\sum^3_{i=1}\P(\text{win car if switch}\mid\text{choose Door i})\cdot\P(\text{choose Door i}) \\ 
+    &=\frac{1}{3}\cdot3\cdot\P(\text{win car if switch}\mid\text{Door 1}) \\
+    &=\P(\text{win car if switch}\mid\text{Door 1}) \\
+    &=\frac{1}{3}+\frac{1}{3}=\frac{2}{3}
+\end{align*}
+Consider choosing Door 1, 
+
+\begin{center}
+\begin{tabular}{c c c}
+Location of car & Host opens  & Outcome if switch \\
+Door 1          & Door 2 or 3 & no car            \\
+Door 2          & Door 3      & win car           \\
+Door 3          & Door 2      & win car          
+\end{tabular}
+\end{center}
+}
+
+\subsection*{Independent Events}
+
+\defn{ $(\Omega, \F, \P)$ is a probability space two events $A, B\in\F$ are independent if $\P(A\cap B)=\P(A)\P(B)$. \\
+If $A, B$ are independent, then \[\P(A\mid B)=\frac{\P(A\cap B)}{\P(B)}=\frac{\P(A)\P(B)}{\P(B)}=\P(A).\]
+}
+
+\eg{Let $\Omega=\{1, 2, \dots, p\}$; $p$ is a prime number. $\F=\{0, 1\}^\Omega$, which $A\subset\Omega$, $\P(A)=\frac{|A|}{p}$, $A\in\F$ means the map $\Omega\rightarrow\{0, 1\}$ such that $A(\omega)=1$ if and only if $\omega\in A$. Show that if $A$ and $B$ are independent events, then at least one of $A$ and $B$ is either $\varnothing$ or $\Omega$.\\
+Pf: Suppose $A, B\subset\Omega$ are independent. Then, 
+\[P(A\cap B)=\P(A)\P(B)\Rightarrow \frac{|A\cap B|}{p}=\frac{|A|}{p}\cdot\frac{|B|}{p}\]
+\[p|A\cap B|=|A|\cdot|B|.\]
+Because $p$ is prime, it divides $|A|$ or $|B|$. Without loss of generality, $p$ divides $|A|$. Because $|A|\in\{0, 1, \dots, p\}$, either $|A|=0$ or $|A|=p\Rightarrow\varnothing$ or $\Omega$.
+}
+
+\defn{$A_1, A_2, \dots, A_n\in\F$ are independent if for every subset $\{A_{1'}, A_{2'},\dots, A_{r'}\}$ s.t. $r\leq n$, we have \[\P(A_{1'}\cap\dots\cap A_{r'})=\P(A_{1'})\dots\P(A_{r'}).\]
+}
+
+\eg{Suppose $\Omega=\{abc, acb, cab, cba, bca, bac, aaa, bbb, bbb\}$, $\F=\{0, 1\}^\Omega$, and each of the nine element in $\Omega$ occurs with equal probability. Let $A_k$ be the event that the $k^{th}$ is "$a$", $k=1, 2, 3$. Show that $A_1, A_2, A_3$ are pairwise independent but not independent. \\
+Pf:\[A_1=\{abc, acb, aaa\}, A_2=\{cab, bac, aaa\}, A_3=\{cba, bca, aaa\}\]
+\[\P(A_k)=\frac{3}{9}=\frac{1}{3}\]
+\[A_1\cap A_2=\{aaa\}=A_1\cap A_3=A_2\cap A_2\]
+when $i\neq j$,
+\[\P(A_k\cap A_j)=\frac{1}{9}=\frac{1}{3}\cdot\frac{1}{3}=\P(A_k)\P(A_j)\]
+\[A_1\cap A_2\cap A_3=\{aaa\}\]
+\[\P(A_1\cap A_2\cap A_3)=\frac{1}{9}\neq\P(A_1)\P(A_2)\P(A_3)=\frac{1}{27}\]
+}
+
+\eg{In a class, there are 4 freshmen boys, 6 freshmen girls, and 6 sophomore boys. How many sophomore girls must be present if gender and class are to be independent if a student is chosen at random? \\
+Ans: Let $x=\#$ sophomore girls. Let $F, S, B, G$ be the events of choosing a freshmen, a sophomore, a boy, or a girl, respectively. Then, 
+\begin{align*}
+    & \P(F\cap B)=\P(F)\P(B) \\
+    \Rightarrow& \frac{4}{16+x}=\frac{10}{16+x}\cdot\frac{10}{16+x} \\
+    \Rightarrow& 16+x=25 \\
+    \Rightarrow& x=9
+\end{align*}
+Suppose we only know $\frac{FB}{FG}=\frac{2}{3}$ and we know $SB=6$
+\[FB+FG=y,\;\;\frac{FB}{FG}+1=\frac{y}{FG} \Rightarrow \frac{5}{3}=\frac{y}{FG}=\frac{2}{3}\cdot\frac{y}{FB},\;\;FG=\frac{3}{2}FB\]
+\[\P(F\cap B)=\P(F)\P(B)\]
+\[\frac{\frac{2}{5}y}{y+6+x}=\frac{y}{y+6+x}\cdot\frac{\frac{2}{5}y+6}{y+6+x}\]
+\[\frac{2}{5}=\frac{\frac{2}{5}y+6}{y+6+x}\]
+\[\frac{2}{5}y+\frac{2}{5}(6+x)=\frac{2}{5}y+6\]
+\[6+x=\frac{5}{2}\cdot 6\]
+\[x=9\]
+
+
+}
+
+\end{document}

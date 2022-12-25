@@ -1,0 +1,165 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\mathcal{P}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 20}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{October 26, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Conditional Probability and Conditional Expectation}
+
+% \subsection*{Introduction}
+% Reasons for studying conditional probability/expectation:
+% \begin{enumerate}
+%     \item Useful tool in calculating unconditional or marginal distribution or expectation or variance.
+%     \item Often we are given information and we want to include that information in our r.v.s, and conditional probability is an accepted way to do that.
+% \end{enumerate}
+
+\defn{
+    \textbf{Conditional probability of discrete r.v.s}
+    \\\\
+    Recall $\P(A\mid B)=\frac{\P(A\cap B)}{\P(B)}$
+    \\\\
+    Suppose we have jointly distribution discrete r.v.s $X$ and $Y$ with pmf
+    \[p_{X,Y}(x,y)=\P(X=x, Y=y)\]
+    Define
+    \begin{align*}
+        p_{X\mid Y}(x\mid y)&=\P(X=x\mid Y=y) \\
+        &=\frac{\P(X=x, Y=y)}{\P(Y=y)} \\
+        &=\frac{p_{X,Y}(x,y)}{p_Y(y)}
+    \end{align*}
+    in which $p_Y(y)=\sum_{x'}p_{X,Y}(x',y)$
+    \\\\
+    Or, if we are given $p_{X\mid Y}$ and $p_Y$, then the joint pmf
+    \[p_{X,Y}(x,y)=p_{X\mid Y}(x\mid y)\cdot p_Y(y)\]
+    Iterated expectation:
+    \[\E_Y(\E_{X\mid Y}(g(X)\mid Y))=\E(g(X))\]
+    \begin{align*}
+        \text{lhs}&=\E\left(\sum_x g(x)p_{X\mid Y}(x|Y)\right) \\
+        &=\sum_y\left(\sum_x g(x)p_{X\mid Y}(x|y)\right)p_Y(y)
+    \end{align*}
+    or
+    \begin{align*}
+        \text{lhs}&=\sum_y\E(g(X)\mid y)p_Y(y) \\
+        &=\sum_y\left(\sum_x g(x)p_{X\mid Y}(x|y)\right)p_Y(y)
+    \end{align*}
+    \begin{align*}
+        \text{lhs(cont'd)}&=\sum_y\sum_x g(x)p_{X,Y}(x,y) \\
+        &=\sum_x g(x)\sum_y p_{X,Y}(x,y) \\
+        &=\sum_x g(x)p_X(x)=\E(g(X))=\text{rhs}
+    \end{align*}
+}
+
+\eg{
+    A hen lays $N$ eggs, in which $N\sim\Poiss(\lambda)$. Each egg hatches with probability $p$, independently of the other eggs.
+    \\\\
+    Let $K=$ the number of chicks. Find $\E(K\mid N)$, $\E K$ and $\E(N\mid K)$.
+    \\\\
+    Solution: If $N=n$, then
+    \[K\mid n\sim\Binom(n,p)\implies\E(K\mid N=n)=np\]
+    \[\E(K)=\E_N(\E_{K\mid N}(K\mid N))=\E_N(N\cdot p)=\lambda p\]
+    To compute $\E(N\mid K)$, we need the conditional pmf of $N\mid K=k$
+    \begin{align*}
+        p_{N\mid K}(n\mid k)&=\P(N=n\mid K=k) \\
+        &=\frac{\P(N=n, K=k)}{\P(K=k)}
+    \end{align*}
+    Given: 
+    \[p_N(n)=e^{-\lambda}\frac{\lambda^n}{n!}, \qquad n=0,1,2,\dots\]
+    \[p_{K\mid N}(k\mid n)=\begin{pmatrix}n\\k\end{pmatrix}p^k(1-p)^{n-k}, \qquad k=0,1,2,\dots,n\]
+    \[\implies p_{N,K}(n,k)=p_{K\mid N}(k\mid n)p_N(n)\]
+    \\\\
+    and
+    \begin{align*}
+        p_K(k)=\P(K=k)&=\sum_{m=k}^\infty p_{N,K}(m,k) \\
+        &=\sum_{m=k}^\infty p_{K\mid N}(k\mid m)p_N(m) \\
+        &=\sum_{m=k}^\infty\begin{pmatrix}m\\k\end{pmatrix}p^k(1-p)^{m-k}\cdot e^{-\lambda}\frac{\lambda^m}{m!} \\
+        &=e^{-\lambda}\sum^\infty_{m=k}\frac{m!}{k!(m-k)!}p^k(1-p)^{m-k}\frac{\lambda^m}{m!} \\
+        &=e^{-\lambda}\frac{1}{k!}p^k\lambda^k\sum^\infty_{m=k}\frac{(\lambda(1-p))^{m-k}}{(m-k)!} \\
+        &=e^{-\lambda}\frac{1}{k!}p^k\lambda^k\sum^\infty_{m'=0}\frac{(\lambda(1-p))^{m'}}{(m')!} \\
+        &=e^{-\lambda}\frac{1}{k!}p^k\lambda^k e^{\lambda(1-p)}
+    \end{align*}
+    \begin{align*}
+        p_{N\mid K}(n\mid k)&=\frac{e^{-\lambda}\frac{1}{k!}p^k\lambda^k\frac{(\lambda(1-p))^{n-k}}{(n-k)!}}{e^{-\lambda}\frac{1}{k!}p^k\lambda^k e^{\lambda(1-p)}} \\
+        &=e^{-\lambda(1-p)}\frac{(\lambda(1-p))^{n-k}}{(n-k)!}, \qquad n=k,k+1,\dots
+    \end{align*}
+    \[\therefore (N-k)\mid(K=k)\sim\Poiss(\lambda(1-p))\]
+    \begin{align*}
+        \therefore \E(N\mid K=k)&=\E((N-k)+k\mid K=k) \\
+        &=\E(N-k\mid K=k)+\E(k\mid K=k) \\
+        &=\lambda(1-p)+k
+    \end{align*}
+}
+
+\defn{
+    \textbf{Conditional probability of continuous r.v.s}
+    \\\\
+    Conditional probability:
+    \begin{align*}
+        \P(X\leq x\mid y<Y\leq y+\Delta y)&=\frac{\P(X\leq x, y<Y\leq y+\Delta y)}{\P(y<Y\leq y+\Delta y)} \\
+        &=\int^x_{-\infty}\int^{y+\Delta y}_y f_{X,Y}(u,v)\;dvdu \\
+        &=\int^{y+\Delta y}_y f_Y(v)\;dv
+    \end{align*}
+    
+}
+
+\end{document}

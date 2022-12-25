@@ -1,0 +1,120 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Binom}{Binom}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+
+\title{Lecture 02}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{August 31, 2022}
+
+\begin{document}
+
+\maketitle
+
+$\F$ is a $\sigma$-algebra of subset of $\Omega$ if it is non-empty, closed under countable union and and closed under complements.
+
+Suppose $A\in\F \implies A^c\in\F$ $A\cup A^c=\Omega\in\F\implies\Omega^c=\varnothing\in\F$
+
+\subsection*{1.3\;\;Probability defined on $(\Omega, \F)$}
+
+Two ways to motivate/define probability:
+\begin{itemize}
+    \item Frequentist: $A\in\F$, then we think of the probability as the long-range proportion of the times that event $A$ occurs. \[\frac{N(A)}{N}\xrightarrow{N\rightarrow\infty}\P(A)\]
+    \item Bayesian/subjective: Suppose you were to win \$1 if A occurs, then $\P(A)$ is the amount you would bet for A to happen.
+\end{itemize}
+
+\defn{$\P$ is a probability on $(\Omega, \F)$ if $\P$ maps $\F$ to $[0, 1]$ such that
+\begin{enumerate}
+    \item $\P(\varnothing)=0$, $\P(\Omega)=1$
+    \item If $A_1, A_2, \dots\in\F$ are pairwise disjoint, then\[\P\left(\bigcup^\infty_{i=1}A_i\right)=\sum^\infty_{i=1}\P(A_i)\] $(\Omega, \F, \P)$ is called a probability space.
+\end{enumerate}
+(Properties of probability) For an arbitrary sequence in $\F$, $B_1, B_2, \dots$ (not necessarily disjoint),\[\bigcup^\infty_{i=1}B_i\in\F\]
+So, \[\P\left(\bigcup^\infty_{i=1}B_i\right)\in[0,1]\]
+\[\leq\sum^\infty_{i=1}\P(B_i)\]
+which is not necessarily equal to the sum of probability
+
+\begin{enumerate}
+    \item  $\P(A^c)=1-\P(A)$
+$A\cap A^c=\varnothing$, so they are disjoint. Thus, 
+\[\P(A\cup A^c)=\P(A)+\P(A^c),\]where $\P(\Omega)=1$. 
+\[\implies 1=\P(A)+\P(A^c)\]
+\[\P(A^c)=1-\P(A).\]
+Aside: If we only require $\P(\Omega)=1$, then
+\[\P(\Omega)=\P(\Omega^c)=1-\P(\Omega)=1-1=0.\]
+Thus, $\P(\Omega)=0$ follows from $\P(\Omega)=1$ and (countable) additivity of $\P$.
+
+    \item If $A\subset B$, then $\P(A)\leq\P(B)$
+\[B=A\cup(B-A)=A\cup(B\cap A^c)\] (disjoint union), where $\P(B\cap A^c)\in[0, 1]$
+\[\P(B)=\P(A)+\P(B\cap A^c)\geq\P(A)\]
+
+    \item $\P(A\cup B)=\P(A)+\P(B)-\P(A\cap B)(\leq\P(A)+\P(B))$
+\[A\cup B=A\cup(B\cap(A\cap B)^c)\]
+\[\P(A\cup B)=\P(A)+\P(B\cap(A\cap B)^c)\]
+Aside from (b):
+\[\P(B)=\P(A)+\P(B\cap A^c)\]
+substituting all $A$ with $A\cap B$, we have 
+\[\P(B\cap(A\cap B)^c)=\P(B)-\P(A\cap B)\]
+\[\P(A\cup B)\overset{Aside}=\P(A)+\P(B)-\P(A\cap B)\]
+
+    \item More generally, if $A_1, A_2, \dots, A_n\in\F$, then an induction proof shows that
+\[\P\left(\bigcup^n_{i=1}A_i\right)=\sum^n_{i=1}\P(A_i)-\sum_{i<j}\P(A_i\cap A_j)+\sum_{i<j<k}\P(A_i\cap A_j\cap A_k)-\dots+(-1)^{n+1}\P(A_1\cap A_2\cap\dots\cap A_n).\]
+\end{enumerate}
+}
+
+\eg{ $A, B\in\F$, $\P(A)=3/4$, $\P(B)=1/3$, Show that $1/12\leq\P(A\cap B)\leq1/3$
+\[A\cap B\subset A\text{\;\;and\;\;}A\cap B\subset B\]
+\[\therefore \P(A\cap B)\leq\min(\P(A), \P(B))=\frac{1}{3}\]
+\[A\cup B\subset\Omega\implies\P(A\cup B)\leq 1\]
+\[\implies\P(A)+\P(B)-\P(A\cap B)\leq 1\]
+\[\implies\P(A\cap B)\geq\P(A)+\P(B)-1=\frac{1}{12}\]
+}
+\end{document}

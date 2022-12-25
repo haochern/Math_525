@@ -1,0 +1,140 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\mathcal{P}}
+\DeclareMathOperator{\Gam}{\text{Gamma}}
+\DeclareMathOperator{\Exp}{\text{Exp}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 30}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{November 28, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{5.3 Poisson Process}
+
+\subsubsection*{5.3.1 Counting Processes}
+
+\defn{
+A stochastic process $\{N(t):t\geq0\}$ is a counting process if $N(0)=0$, $N(t)=\in\{0,1,2,3,\dots\}$ and $s\leq t$ implies $N(s)\leq N(t)$. And $N(t)-N(s)$ represents the number of events during $(s,t]$.
+}
+
+\defn{
+A stochastic process $\{X(t):t\geq 0\}$ has independent increments if $X(a)-X(b)$ is independent of $X(c)-X(d)$ for all $b\leq a$, $d\leq c$ with $(b,a]\cap(d,c]=\emptyset$. Also,
+$\{X(t):t\geq 0\}$ has stationary increments if $X(t+h)-X(t)$ has the same distribution as $X(s+h)-X(s)$ for all $s,t,h\geq 0$.
+}
+
+\subsubsection*{5.3.2 Definition of a Poisson Process}
+
+\defn{
+A counting process $\{N(t):t\geq 0\}$ is a Poisson process with rate $\lambda$($\lambda$ is a positive constant) if \\
+(i) the process has independent and stationary increments.\\
+(ii) $N(t)\sim\Poiss(\lambda t)$
+\\\\
+Claim: For $s<t$, $N(t)-N(s)\sim\sim\Poiss(\lambda(t-s))$.
+\\\\
+Proof: 
+\begin{align*}
+    N(t)-N(s)&\sim N(t-s)-N(0) \\
+    &\sim\Poiss(\lambda(t-s))
+\end{align*}
+Aside: $N(t)-N(s)$ is independent of $N(s)$ because $(s,t]\cap[0,s]=\emptyset$
+\begin{align*}
+    \overset{s<t}{\implies}&\E(N(t)\mid N(s)=n) \\
+    =&\E((N(t)-N(s))+N(s)\mid N(s)=n) \\
+    =&\E(N(t)-N(s)\mid N(s)=n)+\E(N(s)\mid N(s)=n) \\
+    =&\E(N(t)-N(s))+n \\
+    =&\lambda(t-s)+n
+\end{align*}
+ As a comparison, $\E(N(t))=\lambda t$
+}
+
+\eg{
+Interarrival and waiting time distributions:
+\\\\
+Let $T_1$ to be the time of the first event, For $n=2,3,\dots$, let $T_n$ to be elapsed time between the $(n-1)^\text{th}$ and $n^\text{th}$ events. $T_1, T_2, T_3,\dots$ is the sequence of interarrival times.
+\\\\
+Prop 5.4: $T_1, T_2,\dots$ are iid $\Exp(\lambda)$.
+\\\\
+First, $\forall t\geq 0$
+\begin{align*}
+    \P(T_1>t)&=\P(N(t)=0)=e^{-\lambda t}
+\end{align*}
+where $N(t)\sim\Poiss(\lambda t)$.
+\[\implies T_1\sim\Exp(\lambda)\]
+Next, $\forall s$, $s\geq t_1$
+\begin{align*}
+    \P(T_2>t\mid T_1=t_1)&=\P(N(t_1+t)-N(t_1)=0\mid N(t_1)=1) \\
+    % &\overset{\text{claim}}{=}\P(N(t_1+t)-N(t_1)=0\mid N(t_1)=1) \\
+    &=\P(N(t)=0)=e^{-\lambda t}
+\end{align*}
+\[\implies T_2\implies\Exp(\lambda)\]
+Continuing this argument
+\begin{align*}
+    &\P(T_n>t\mid T_1=t_1, T_2=t_2, \dots, T_{n-1}=t_{n-1}) \\
+    =&\P(N(t+t_1+\dots+t_{n-1})-N(t_1+\dots+t_{n-1})=0\mid N(t_1+\dots+t_{n-1})=n-1) \\
+    =&\P(N(t)=0)=e^{-\lambda t}
+\end{align*}
+which is independent of $T_1, \dots, T_{n-1}$
+\[\implies T_n\sim\Exp(\lambda)\]
+}
+
+
+\end{document}

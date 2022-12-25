@@ -1,0 +1,151 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[legalpaper, margin=1in]{geometry}
+\setlength{\parindent}{0pt}
+
+% Formatting commands
+\newcommand{\n}{\hfill\break}
+\newcommand{\lemma}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Lemma: }}\textbf{Lemma: }#1\n}
+\newcommand{\defn}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Defn: }}\textbf{Defn: }#1\n}
+\newcommand{\recap}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Recap: }}\textbf{Recap: }#1\n}
+\newcommand{\eg}[1]{\par\noindent\settowidth{\hangindent}{\textbf{E.g.: }}\textbf{E.g.: }#1\n}
+\newcommand{\thm}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Thm: }}\textbf{Thm: }#1\n}
+\newcommand{\cor}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Cor: }}\textbf{Cor: }#1\n}
+\newcommand{\pf}[1]{\par\noindent\settowidth{\hangindent}{\textbf{Proof: }}\textbf{Proof: }#1\n}
+\newcommand{\hw}[1]{\par\noindent\settowidth{\hangindent}{\textbf{HW: }}\textbf{HW: }#1\n}
+\newcommand{\proven}{\;$\square$\n}
+\newcommand{\problem}[1]{\par\noindent{#1}\n}
+\newcommand{\problempart}[2]{\par\settowidth{\hangindent}{\textbf{(#1)} \indent{}}\textbf{(#1)} #2\n}
+\newcommand{\ptxt}[1]{\textrm{\textnormal{#1}}}
+\newcommand{\inlineeq}[1]{\n\centerline{$\displaystyle #1$}}
+\newcommand{\pageline}{\noindent\rule{\textwidth}{0.1pt}\n}
+
+% Math
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\R}{\reals}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\Z}{\integers}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\Q}{\rationals}
+\newcommand{\dom}{\textbf{dom}\;}
+\newcommand{\epi}{\textbf{epi}\;}
+\newcommand{\prob}{\textbf{prob}}
+\newcommand{\ceil}{\text{ceil}}
+
+% Probability
+\newcommand{\F}{\mathcal F} 
+\newcommand{\parSymbol}{\P}
+\newcommand{\Prob}{\mathbb{P}}
+\renewcommand{\P}{\Prob}
+\newcommand{\Avg}{\mathbb{E}}
+\newcommand{\E}{\Avg}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
+\DeclareMathOperator{\Poiss}{\text{Poisson}}
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}}
+
+% Text
+\newcommand{\tand}{\;\text{and}\;}
+
+\title{Lecture 22}
+\author{Professor Virginia R. Young\\ \small{Transcribed by Hao Chen}}
+\date{October 31, 2022}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Calculating expectation and variance by conditioning}
+\defn{
+    \[\E_XX=\E_Y(\E_{X\mid Y}(X\mid Y))\]
+    Also,
+    \[\E_Xg(X)=\E_Y(\E_{X\mid Y}(g(X)\mid Y))\]
+    \[\overset{g(X)=X^2}{\implies}\E_XX^2=\E_Y(\E_{X\mid Y}(X^2\mid Y))\]
+    \begin{align*}
+        \Var X &= \E(X^2)-(\E X)^2 \\
+        &=\E(\E(X^2\mid Y))-(\E(\E(X\mid Y)))^2 \\
+        &=\E(\Var(X\mid Y)+(\E(X\mid Y))^2)-(\E(\E(X\mid Y)))^2 \\
+        &=\E(\Var(X\mid Y))+\E((\E(X\mid Y))^2)-(\E(\E(X\mid Y)))^2 \\
+        &=\E(\Var(X\mid Y))+\Var(\E(X\mid Y))
+    \end{align*}
+    in stats, called ANOVA.
+}
+
+\defn{
+    Compound model: $S=X_1+X_2+\dots+X_N$, $N=\text{the number of events}\in\{0,1,2,\dots\}$, $X_i$ are iid and independent of $N$.
+    \begin{align*}
+        \E S&=\E(\E(S\mid N)) \\
+        &=\E(\E(X_1+\dots+X_N\mid N)) \\
+        &=\E(N\cdot\E X) \\
+        &=\E N\cdot \E X
+    \end{align*}
+    \begin{align*}
+        \Var S&=\E(\Var(S\mid N))+\Var(\E(S\mid N)) \\
+        &=\E(\Var(X_1+\dots+X_N\mid N))+\Var(\E(S\mid N)) \\
+        &=\E(N\cdot\Var(X))+\Var(N\cdot\E(X)) \\
+        &=\E N\cdot\Var X+(\E X)^2\cdot\Var N
+    \end{align*}
+    Suppose $N=\E N\implies\Var S=\E N\cdot\Var X$ \\
+    Suppose $X=\E X\implies S=\E X\cdot N\implies\Var S=(\E X)^2\Var N$
+}
+
+\eg{
+    Special case: $N\sim\Poiss(\lambda)$; then $S$ follows the compound Poisson model
+    \[\E N=\lambda=\Var N\]
+    \[\implies\E S=\E N\cdot\E X=\lambda\E X\]
+    \begin{align*}
+        \Var S&=\E N\cdot\Var X+(\E X)^2\Var N \\
+        &=\lambda\Var X+\lambda(\E X)^2 \\
+        &=\lambda\E(X^2)
+    \end{align*}
+    If $\lambda$ is large, then we often use the normal distribution to approximate the compound Poisson.
+    \[\P(S\leq s)=\P\left(\frac{S-\E S}{\sqrt{\Var S}}\leq\frac{s-\E S}{\sqrt{\Var S}}\right)\]
+    \begin{align*}
+        \lambda\uparrow\implies\P(S\leq s)&\approx\P\left(Z\leq \frac{s-\E S}{\sqrt{\Var S}}\right) \\
+        &=\Phi\left(\frac{s-\lambda\E X}{\sqrt{\lambda\E(X^2)}}\right)
+    \end{align*}
+}
+
+\eg{
+    Exs (not the compound model)
+    \\\\
+    Last time Ex.3.11 mean of the geometric distribution, we computed it by conditioning on $Y=1$ if first experiment was a success; 0, otherwise. $\implies\E N=\frac{1}{p}$
+    \\\\
+    Ex3.19: Variance of the geometric:
+    \\\\
+    Independent trials, each with probability $p$ of success, $N$ is the number of trials until $1^\text{st}$ success. Calculate $\Var N$.
+    \\\\
+    Solution:
+    \begin{align*}
+        \Var N&=\E(N^2)-(\E N)^2 \\
+        &=\E(N^2)-\frac{1}{p^2}
+    \end{align*}
+    \begin{align*}
+        \E(N^2)&=\E(\E(N^2\mid Y)) \\
+        &=\E(N^2\mid Y=1)\P(Y=1)+\E(N^2\mid Y=0)\P(Y=0) \\
+        &=1^2\cdot p+\E((1+N)^2)(1-p) \\
+        &=p+\E(1+2N+N^2)(1-p) \\
+        &=p+(1+2\cdot\frac{1}{p}+\E(N^2))(1-p) \\
+    \end{align*}
+    \begin{align*}
+        p\E(N^2)&=p+(1-p)\left(1+\frac{2}{p}\right) \\
+        \E(N^2)&=1-\left(1-\frac{1}{p}\right)\left(1+\frac{2}{p}\right) \\
+        &=1-\left(1+\frac{1}{p}-\frac{2}{p^2}\right) \\
+        &=-\frac{1}{p}+\frac{2}{p^2}
+    \end{align*}
+    \[\Var N=-\frac{1}{p}+\frac{2}{p^2}-\frac{1}{p^2}=\frac{1}{p^2}-\frac{1}{p}=\frac{1-p}{p^2}\]
+    %TODO
+}
+
+\end{document}
